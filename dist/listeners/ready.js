@@ -13,7 +13,19 @@ const discord_js_1 = require("discord.js");
 const lavacoffee_1 = require("lavacoffee");
 const config_1 = require("../config");
 let ReadyEvent = class ReadyEvent extends framework_1.Listener {
-    run() {
+    async run() {
+        this.container.logger.info("Configs loaded");
+        const developerID = await this.container.client.application.fetch();
+        if (developerID.owner instanceof discord_js_1.Team) {
+            for (const ownerID of developerID.owner.members.keys()) {
+                if (!config_1.config.owners.includes(ownerID))
+                    config_1.config.owners.push(ownerID);
+            }
+        }
+        else if (!config_1.config.owners.includes(developerID.owner.id)) {
+            config_1.config.owners.push(developerID.owner.id);
+        }
+        this.container.logger.info("Application info fetched");
         this.container.client.user.setActivity({
             name: "💜 /help",
             type: "WATCHING"

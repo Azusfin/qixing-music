@@ -5,113 +5,102 @@ import { QixingError } from "./structures/QixingError"
 
 const envRegex = /{{(.+)}}/g
 
-export let config!: Config
+const rawConfigFile = readFileSync("config.yaml", "utf-8")
+const rawConfig = parseDocument(rawConfigFile)
 
-try {
-    const rawConfigFile = readFileSync("config.yaml", "utf-8")
+const rawToken = rawConfig.get("token")
+let token!: string
 
-    try {
-        const rawConfig = parseDocument(rawConfigFile)
+if (validateString(rawToken, "token")) {
+    token = resolveString(rawToken)
+}
 
-        const rawToken = rawConfig.get("token")
-        let token!: string
+const rawNodes = rawConfig.get("nodes")
 
-        if (validateString(rawToken, "token")) {
-            token = resolveString(rawToken)
-        }
+if (!isSeq(rawNodes)) throw new QixingError("CONFIG", "Pair must be a sequence at 'nodes'")
 
-        const rawNodes = rawConfig.get("nodes")
+const nodes: Node[] = []
 
-        if (!isSeq(rawNodes)) throw new QixingError("CONFIG", "Pair must be a sequence at 'nodes'")
+for (let i = 0; i < rawNodes.items.length; i++) {
+    const rawNode = rawNodes.get(i)
 
-        const nodes: Node[] = []
+    if (!isMap(rawNode)) throw new QixingError("CONFIG", `Pair must be a map at 'nodes.${i}'`)
 
-        for (let i = 0; i < rawNodes.items.length; i++) {
-            const rawNode = rawNodes.get(i)
+    const rawName = rawNode.get("name")
+    let name!: string
 
-            if (!isMap(rawNode)) throw new QixingError("CONFIG", `Pair must be a map at 'nodes.${i}'`)
-
-            const rawName = rawNode.get("name")
-            let name!: string
-
-            if (validateString(rawName, `nodes.${i}.name`)) {
-                name = resolveString(rawName)
-            }
-
-            const rawUrl = rawNode.get("url")
-            let url!: string
-
-            if (validateString(rawUrl, `nodes.${i}.url`)) {
-                url = resolveString(rawUrl)
-            }
-
-            const rawPassword = rawNode.get("password")
-            let password = "youshallnotpass"
-
-            if (rawPassword !== undefined && validateString(rawPassword, `nodes.${i}.password`)) {
-                password = resolveString(rawPassword)
-            }
-
-            const rawIsSecure = rawNode.get("is-secure")
-            let secure = false
-
-            if (rawIsSecure !== undefined && validateBoolean(rawIsSecure, `nodes.${i}.is-secure`)) {
-                secure = rawIsSecure
-            }
-
-            const node: Node = {
-                name,
-                url,
-                password,
-                secure
-            }
-
-            nodes.push(node)
-        }
-
-        if (!nodes.length) throw new QixingError("CONFIG", "Need atleast one node configured")
-
-        const rawEmbedColor = rawConfig.get("embed-color")
-        let embedColor: ColorResolvable = "#7E57C2"
-
-        if (rawEmbedColor !== undefined && validateString(rawEmbedColor, "embed-color")) {
-            embedColor = resolveString(rawEmbedColor) as ColorResolvable
-        }
-
-        const rawMaintenance = rawConfig.get("maintenance")
-        let maintenance = false
-
-        if (rawMaintenance !== undefined && validateBoolean(rawMaintenance, "maintenance")) {
-            maintenance = rawMaintenance
-        }
-
-        const rawOwners = rawConfig.get("owners")
-        const owners: string[] = []
-
-        if (rawOwners !== undefined) {
-            if (!isSeq(rawOwners)) throw new QixingError("CONFIG", "Pair must be a sequence at 'owners'")
-
-            for (let i = 0; i < rawOwners.items.length; i++) {
-                const owner = rawOwners.get(i)
-
-                if (validateString(owner, `owners.${i}`)) {
-                    owners.push(resolveString(owner))
-                }
-            }
-        }
-
-        config = {
-            token,
-            nodes,
-            embedColor,
-            maintenance,
-            owners
-        }
-    } catch (err) {
-        throw new QixingError("CONFIG", (err as Error).message)
+    if (validateString(rawName, `nodes.${i}.name`)) {
+        name = resolveString(rawName)
     }
-} catch (err) {
-    throw new QixingError("CONFIG", (err as Error).message)
+
+    const rawUrl = rawNode.get("url")
+    let url!: string
+
+    if (validateString(rawUrl, `nodes.${i}.url`)) {
+        url = resolveString(rawUrl)
+    }
+
+    const rawPassword = rawNode.get("password")
+    let password = "youshallnotpass"
+
+    if (rawPassword !== undefined && validateString(rawPassword, `nodes.${i}.password`)) {
+        password = resolveString(rawPassword)
+    }
+
+    const rawIsSecure = rawNode.get("is-secure")
+    let secure = false
+
+    if (rawIsSecure !== undefined && validateBoolean(rawIsSecure, `nodes.${i}.is-secure`)) {
+        secure = rawIsSecure
+    }
+
+    const node: Node = {
+        name,
+        url,
+        password,
+        secure
+    }
+
+    nodes.push(node)
+}
+
+if (!nodes.length) throw new QixingError("CONFIG", "Need atleast one node configured")
+
+const rawEmbedColor = rawConfig.get("embed-color")
+let embedColor: ColorResolvable = "#7E57C2"
+
+if (rawEmbedColor !== undefined && validateString(rawEmbedColor, "embed-color")) {
+    embedColor = resolveString(rawEmbedColor) as ColorResolvable
+}
+
+const rawMaintenance = rawConfig.get("maintenance")
+let maintenance = false
+
+if (rawMaintenance !== undefined && validateBoolean(rawMaintenance, "maintenance")) {
+    maintenance = rawMaintenance
+}
+
+const rawOwners = rawConfig.get("owners")
+const owners: string[] = []
+
+if (rawOwners !== undefined) {
+    if (!isSeq(rawOwners)) throw new QixingError("CONFIG", "Pair must be a sequence at 'owners'")
+
+    for (let i = 0; i < rawOwners.items.length; i++) {
+        const owner = rawOwners.get(i)
+
+        if (validateString(owner, `owners.${i}`)) {
+            owners.push(resolveString(owner))
+        }
+    }
+}
+
+export const config: Config = {
+    token,
+    nodes,
+    embedColor,
+    maintenance,
+    owners
 }
 
 export interface Config {

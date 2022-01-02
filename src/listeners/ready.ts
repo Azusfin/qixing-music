@@ -1,6 +1,6 @@
 import { ApplyOptions } from "@sapphire/decorators"
 import { Listener, ListenerOptions } from "@sapphire/framework"
-import { Message, MessageEmbed, TextChannel } from "discord.js"
+import { Message, MessageEmbed, Team, TextChannel } from "discord.js"
 import { CoffeeLava, CoffeeTrack, Utils } from "lavacoffee"
 import { config } from "../config"
 
@@ -9,7 +9,21 @@ import { config } from "../config"
     once: true
 })
 export class ReadyEvent extends Listener {
-    run(): void {
+    async run(): Promise<void> {
+        this.container.logger.info("Configs loaded")
+
+        const developerID = await this.container.client.application!.fetch()
+
+        if (developerID.owner instanceof Team) {
+            for (const ownerID of developerID.owner.members.keys()) {
+                if (!config.owners.includes(ownerID)) config.owners.push(ownerID)
+            }
+        } else if (!config.owners.includes(developerID.owner!.id)) {
+            config.owners.push(developerID.owner!.id)
+        }
+
+        this.container.logger.info("Application info fetched")
+
         this.container.client.user!.setActivity({
             name: "💜 /help",
             type: "WATCHING"

@@ -5,90 +5,80 @@ const node_fs_1 = require("node:fs");
 const yaml_1 = require("yaml");
 const QixingError_1 = require("./structures/QixingError");
 const envRegex = /{{(.+)}}/g;
-try {
-    const rawConfigFile = (0, node_fs_1.readFileSync)("config.yaml", "utf-8");
-    try {
-        const rawConfig = (0, yaml_1.parseDocument)(rawConfigFile);
-        const rawToken = rawConfig.get("token");
-        let token;
-        if (validateString(rawToken, "token")) {
-            token = resolveString(rawToken);
-        }
-        const rawNodes = rawConfig.get("nodes");
-        if (!(0, yaml_1.isSeq)(rawNodes))
-            throw new QixingError_1.QixingError("CONFIG", "Pair must be a sequence at 'nodes'");
-        const nodes = [];
-        for (let i = 0; i < rawNodes.items.length; i++) {
-            const rawNode = rawNodes.get(i);
-            if (!(0, yaml_1.isMap)(rawNode))
-                throw new QixingError_1.QixingError("CONFIG", `Pair must be a map at 'nodes.${i}'`);
-            const rawName = rawNode.get("name");
-            let name;
-            if (validateString(rawName, `nodes.${i}.name`)) {
-                name = resolveString(rawName);
-            }
-            const rawUrl = rawNode.get("url");
-            let url;
-            if (validateString(rawUrl, `nodes.${i}.url`)) {
-                url = resolveString(rawUrl);
-            }
-            const rawPassword = rawNode.get("password");
-            let password = "youshallnotpass";
-            if (rawPassword !== undefined && validateString(rawPassword, `nodes.${i}.password`)) {
-                password = resolveString(rawPassword);
-            }
-            const rawIsSecure = rawNode.get("is-secure");
-            let secure = false;
-            if (rawIsSecure !== undefined && validateBoolean(rawIsSecure, `nodes.${i}.is-secure`)) {
-                secure = rawIsSecure;
-            }
-            const node = {
-                name,
-                url,
-                password,
-                secure
-            };
-            nodes.push(node);
-        }
-        if (!nodes.length)
-            throw new QixingError_1.QixingError("CONFIG", "Need atleast one node configured");
-        const rawEmbedColor = rawConfig.get("embed-color");
-        let embedColor = "#7E57C2";
-        if (rawEmbedColor !== undefined && validateString(rawEmbedColor, "embed-color")) {
-            embedColor = resolveString(rawEmbedColor);
-        }
-        const rawMaintenance = rawConfig.get("maintenance");
-        let maintenance = false;
-        if (rawMaintenance !== undefined && validateBoolean(rawMaintenance, "maintenance")) {
-            maintenance = rawMaintenance;
-        }
-        const rawOwners = rawConfig.get("owners");
-        const owners = [];
-        if (rawOwners !== undefined) {
-            if (!(0, yaml_1.isSeq)(rawOwners))
-                throw new QixingError_1.QixingError("CONFIG", "Pair must be a sequence at 'owners'");
-            for (let i = 0; i < rawOwners.items.length; i++) {
-                const owner = rawOwners.get(i);
-                if (validateString(owner, `owners.${i}`)) {
-                    owners.push(resolveString(owner));
-                }
-            }
-        }
-        exports.config = {
-            token,
-            nodes,
-            embedColor,
-            maintenance,
-            owners
-        };
+const rawConfigFile = (0, node_fs_1.readFileSync)("config.yaml", "utf-8");
+const rawConfig = (0, yaml_1.parseDocument)(rawConfigFile);
+const rawToken = rawConfig.get("token");
+let token;
+if (validateString(rawToken, "token")) {
+    token = resolveString(rawToken);
+}
+const rawNodes = rawConfig.get("nodes");
+if (!(0, yaml_1.isSeq)(rawNodes))
+    throw new QixingError_1.QixingError("CONFIG", "Pair must be a sequence at 'nodes'");
+const nodes = [];
+for (let i = 0; i < rawNodes.items.length; i++) {
+    const rawNode = rawNodes.get(i);
+    if (!(0, yaml_1.isMap)(rawNode))
+        throw new QixingError_1.QixingError("CONFIG", `Pair must be a map at 'nodes.${i}'`);
+    const rawName = rawNode.get("name");
+    let name;
+    if (validateString(rawName, `nodes.${i}.name`)) {
+        name = resolveString(rawName);
     }
-    catch (err) {
-        throw new QixingError_1.QixingError("CONFIG", err.message);
+    const rawUrl = rawNode.get("url");
+    let url;
+    if (validateString(rawUrl, `nodes.${i}.url`)) {
+        url = resolveString(rawUrl);
+    }
+    const rawPassword = rawNode.get("password");
+    let password = "youshallnotpass";
+    if (rawPassword !== undefined && validateString(rawPassword, `nodes.${i}.password`)) {
+        password = resolveString(rawPassword);
+    }
+    const rawIsSecure = rawNode.get("is-secure");
+    let secure = false;
+    if (rawIsSecure !== undefined && validateBoolean(rawIsSecure, `nodes.${i}.is-secure`)) {
+        secure = rawIsSecure;
+    }
+    const node = {
+        name,
+        url,
+        password,
+        secure
+    };
+    nodes.push(node);
+}
+if (!nodes.length)
+    throw new QixingError_1.QixingError("CONFIG", "Need atleast one node configured");
+const rawEmbedColor = rawConfig.get("embed-color");
+let embedColor = "#7E57C2";
+if (rawEmbedColor !== undefined && validateString(rawEmbedColor, "embed-color")) {
+    embedColor = resolveString(rawEmbedColor);
+}
+const rawMaintenance = rawConfig.get("maintenance");
+let maintenance = false;
+if (rawMaintenance !== undefined && validateBoolean(rawMaintenance, "maintenance")) {
+    maintenance = rawMaintenance;
+}
+const rawOwners = rawConfig.get("owners");
+const owners = [];
+if (rawOwners !== undefined) {
+    if (!(0, yaml_1.isSeq)(rawOwners))
+        throw new QixingError_1.QixingError("CONFIG", "Pair must be a sequence at 'owners'");
+    for (let i = 0; i < rawOwners.items.length; i++) {
+        const owner = rawOwners.get(i);
+        if (validateString(owner, `owners.${i}`)) {
+            owners.push(resolveString(owner));
+        }
     }
 }
-catch (err) {
-    throw new QixingError_1.QixingError("CONFIG", err.message);
-}
+exports.config = {
+    token,
+    nodes,
+    embedColor,
+    maintenance,
+    owners
+};
 function resolveString(str) {
     return str.replace(envRegex, (_, rawEnvname) => {
         const envName = rawEnvname.trim();
