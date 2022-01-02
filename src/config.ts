@@ -95,12 +95,28 @@ if (rawOwners !== undefined) {
     }
 }
 
+const rawServers = rawConfig.get("servers")
+const servers: string[] = []
+
+if (rawServers !== undefined) {
+    if (!isSeq(rawServers)) throw new QixingError("CONFIG", "Pair must be a sequence at 'servers'")
+
+    for (let i = 0; i < rawServers.items.length; i++) {
+        const server = rawServers.get(i)
+
+        if (validateString(server, `servers.${i}`)) {
+            servers.push(resolveString(server))
+        }
+    }
+}
+
 export const config: Config = {
     token,
     nodes,
     embedColor,
     maintenance,
-    owners
+    owners,
+    servers
 }
 
 export interface Config {
@@ -109,6 +125,7 @@ export interface Config {
     embedColor: ColorResolvable
     maintenance: boolean
     owners: string[]
+    servers: string[]
 }
 
 export interface Node {

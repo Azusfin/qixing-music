@@ -33,3 +33,7 @@ maintenance: false
 # Optional
 owners:
   - '709261464468193322'
+# Some test servers to register commands to
+# Optional
+servers:
+  - '918349846073733200'
