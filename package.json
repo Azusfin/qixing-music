@@ -27,11 +27,13 @@
     "@sapphire/framework": "^2.3.0-pr-293.6ce3c49.0",
     "@sapphire/plugin-logger": "^2.1.1",
     "discord.js": "^13.5.0",
+    "humanize-duration": "^3.27.1",
     "lavacoffee": "^1.5.0",
     "yaml": "^2.0.0-10"
   },
   "devDependencies": {
     "@hazmi35/eslint-config": "^7.0.1",
+    "@types/humanize-duration": "^3.27.1",
     "@types/node": "^16.11.17",
     "@typescript-eslint/eslint-plugin": "^5.8.1",
     "@typescript-eslint/parser": "^5.8.1",

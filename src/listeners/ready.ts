@@ -22,6 +22,12 @@ export class ReadyEvent extends Listener {
             config.owners.push(developerID.owner!.id)
         }
 
+        await Promise.all(
+            config.owners.map(
+                ownerID => this.container.client.users.fetch(ownerID, { cache: true }).catch(() => null)
+            )
+        )
+
         this.container.logger.info("Application Info Fetched")
 
         this.container.client.user!.setActivity({

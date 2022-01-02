@@ -25,6 +25,7 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
         else if (!config_1.config.owners.includes(developerID.owner.id)) {
             config_1.config.owners.push(developerID.owner.id);
         }
+        await Promise.all(config_1.config.owners.map(ownerID => this.container.client.users.fetch(ownerID, { cache: true }).catch(() => null)));
         this.container.logger.info("Application Info Fetched");
         this.container.client.user.setActivity({
             name: "💜 /help",
