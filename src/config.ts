@@ -1,6 +1,9 @@
+import { ColorResolvable } from "discord.js"
 import { readFileSync } from "node:fs"
 import { parseDocument, isSeq, isMap } from "yaml"
 import { QixingError } from "./structures/QixingError"
+
+const envRegex = /{{(.+)}}/g
 
 export let config!: Config
 
@@ -69,10 +72,10 @@ try {
         if (!nodes.length) throw new QixingError("CONFIG", "Need atleast one node configured")
 
         const rawEmbedColor = rawConfig.get("embed-color")
-        let embedColor = "#7E57C2"
+        let embedColor: ColorResolvable = "#7E57C2"
 
         if (rawEmbedColor !== undefined && validateString(rawEmbedColor, "embed-color")) {
-            embedColor = resolveString(rawEmbedColor)
+            embedColor = resolveString(rawEmbedColor) as ColorResolvable
         }
 
         const rawMaintenance = rawConfig.get("maintenance")
@@ -114,7 +117,7 @@ try {
 export interface Config {
     token: string
     nodes: Node[]
-    embedColor: string
+    embedColor: ColorResolvable
     maintenance: boolean
     owners: string[]
 }
@@ -125,8 +128,6 @@ export interface Node {
     password: string
     secure: boolean
 }
-
-const envRegex = /{{(.+)}}/g
 
 function resolveString(str: string): string {
     return str.replace(envRegex, (_, rawEnvname: string) => {

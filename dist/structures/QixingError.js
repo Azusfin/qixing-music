@@ -4,7 +4,7 @@ exports.QixingError = void 0;
 class QixingError extends Error {
     constructor(name, message) {
         super(message);
-        this.name = name;
+        this.name = `QixingError [${name}]`;
     }
 }
 exports.QixingError = QixingError;

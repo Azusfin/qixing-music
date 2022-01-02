@@ -4,6 +4,7 @@ exports.config = void 0;
 const node_fs_1 = require("node:fs");
 const yaml_1 = require("yaml");
 const QixingError_1 = require("./structures/QixingError");
+const envRegex = /{{(.+)}}/g;
 try {
     const rawConfigFile = (0, node_fs_1.readFileSync)("config.yaml", "utf-8");
     try {
@@ -61,38 +62,24 @@ try {
         if (rawMaintenance !== undefined && validateBoolean(rawMaintenance, "maintenance")) {
             maintenance = rawMaintenance;
         }
-        const rawMongo = rawConfig.get("mongo");
-        let mongo;
-        if (rawMongo !== undefined) {
-            if (!(0, yaml_1.isMap)(rawMongo))
-                throw new QixingError_1.QixingError("CONFIG", "Pair must be a map at 'mongo'");
-            const rawUrl = rawMongo.get("url");
-            let url;
-            if (validateString(rawUrl, "mongo.url")) {
-                url = rawUrl;
+        const rawOwners = rawConfig.get("owners");
+        const owners = [];
+        if (rawOwners !== undefined) {
+            if (!(0, yaml_1.isSeq)(rawOwners))
+                throw new QixingError_1.QixingError("CONFIG", "Pair must be a sequence at 'owners'");
+            for (let i = 0; i < rawOwners.items.length; i++) {
+                const owner = rawOwners.get(i);
+                if (validateString(owner, `owners.${i}`)) {
+                    owners.push(resolveString(owner));
+                }
             }
-            const rawDatabase = rawMongo.get("database");
-            let database = "qixing-music";
-            if (rawDatabase !== undefined && validateString(rawDatabase, "mongo.database")) {
-                database = rawDatabase;
-            }
-            const rawCollection = rawMongo.get("collection");
-            let collection = "queue";
-            if (rawCollection !== undefined && validateString(rawCollection, "mongo.collection")) {
-                collection = rawCollection;
-            }
-            mongo = {
-                url,
-                database,
-                collection
-            };
         }
         exports.config = {
             token,
             nodes,
             embedColor,
             maintenance,
-            mongo
+            owners
         };
     }
     catch (err) {
@@ -102,7 +89,6 @@ try {
 catch (err) {
     throw new QixingError_1.QixingError("CONFIG", err.message);
 }
-const envRegex = /{{(.+)}}/g;
 function resolveString(str) {
     return str.replace(envRegex, (_, rawEnvname) => {
         const envName = rawEnvname.trim();
