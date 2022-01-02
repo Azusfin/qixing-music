@@ -97,47 +97,12 @@ try {
             }
         }
 
-        const rawMongo = rawConfig.get("mongo")
-        let mongo: Mongo | undefined
-
-        if (rawMongo !== undefined) {
-            if (!isMap(rawMongo)) throw new QixingError("CONFIG", "Pair must be a map at 'mongo'")
-
-            const rawUrl = rawMongo.get("url")
-            let url!: string
-
-            if (validateString(rawUrl, "mongo.url")) {
-                url = resolveString(rawUrl)
-            }
-
-            const rawDatabase = rawMongo.get("database")
-            let database = "qixing-music"
-
-            if (rawDatabase !== undefined && validateString(rawDatabase, "mongo.database")) {
-                database = resolveString(rawDatabase)
-            }
-
-            const rawCollection = rawMongo.get("collection")
-            let collection = "player"
-
-            if (rawCollection !== undefined && validateString(rawCollection, "mongo.collection")) {
-                collection = resolveString(rawCollection)
-            }
-
-            mongo = {
-                url,
-                database,
-                collection
-            }
-        }
-
         config = {
             token,
             nodes,
             embedColor,
             maintenance,
-            owners,
-            mongo
+            owners
         }
     } catch (err) {
         throw new QixingError("CONFIG", (err as Error).message)
@@ -152,7 +117,6 @@ export interface Config {
     embedColor: string
     maintenance: boolean
     owners: string[]
-    mongo?: Mongo
 }
 
 export interface Node {
@@ -160,12 +124,6 @@ export interface Node {
     url: string
     password: string
     secure: boolean
-}
-
-export interface Mongo {
-    url: string
-    database: string
-    collection: string
 }
 
 const envRegex = /{{(.+)}}/g

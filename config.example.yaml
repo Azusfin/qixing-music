@@ -33,15 +33,3 @@ maintenance: false
 # Optional
 owners:
   - '709261464468193322'
-# The mongo cluster options to allow resuming
-# Optional
-mongo:
-  # The mongo cluster
-  # Required
-  url: '{{ MONGO_URL }}'
-  # The mongo database name used
-  # Optional
-  database: qixing-music
-  # The mongo collection name used
-  # Optional
-  collection: player
