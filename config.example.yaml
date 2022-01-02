@@ -1,0 +1,43 @@
+# To use evironment variables
+# use '{{ <envname> }}'
+
+# The discord bot token
+# Required
+token: '{{ DISCORD_TOKEN }}'
+# The lavalink nodes used
+# Required
+nodes:
+  - # First node
+    # The node name
+    # Required
+    name: lava1
+    # The node url
+    # Required
+    url: '{{ LAVA1_URL }}'
+    # The node password
+    # Optional
+    password: '{{ LAVA1_PASSWORD }}'
+    # Whether the host use SSL
+    # Optional
+    is-secure: false
+
+  - # ...
+# The bot default embed color
+# Optional
+embed-color: '#7E57C2'
+# Whether the bot is on maintenance state
+# to prevent users from using the bot
+# Optional
+maintenance: false
+# The mongo cluster options to allow resuming
+# Optional
+mongo:
+  # The mongo cluster
+  # Required
+  url: '{{ MONGO_URL }}'
+  # The mongo database name used
+  # Optional
+  database: qixing-music
+  # The mongo collection name used
+  # Optional
+  collection: queue

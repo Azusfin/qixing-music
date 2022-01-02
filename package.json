@@ -24,12 +24,12 @@
   "homepage": "https://github.com/Azusfin/qixing-music#readme",
   "dependencies": {
     "@discordjs/builders": "^0.11.0",
-    "@sapphire/framework": "^2.3.0-pr-293.cfc7538.0",
+    "@sapphire/framework": "^2.3.0-pr-293.6ce3c49.0",
     "@sapphire/plugin-logger": "^2.1.1",
     "aoi.mongo": "^0.1.1",
     "discord.js": "^13.5.0",
     "lavacoffee": "^1.5.0",
-    "yaml": "^1.10.2"
+    "yaml": "^2.0.0-10"
   },
   "devDependencies": {
     "@hazmi35/eslint-config": "^7.0.1",
@@ -66,7 +66,9 @@
       "@typescript-eslint/prefer-optional-chain": 0,
       "@typescript-eslint/no-unsafe-argument": 0,
       "@typescript-eslint/naming-convention": 0,
-      "@typescript-eslint/no-base-to-string": 0
+      "@typescript-eslint/no-base-to-string": 0,
+      "@typescript-eslint/member-delimiter-style": 0,
+      "@typescript-eslint/semi": 0
     }
   }
 }
