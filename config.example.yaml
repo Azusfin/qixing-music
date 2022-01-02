@@ -29,6 +29,10 @@ embed-color: '#7E57C2'
 # to prevent users from using the bot
 # Optional
 maintenance: false
+# The bot owners
+# Optional
+owners:
+  - '709261464468193322'
 # The mongo cluster options to allow resuming
 # Optional
 mongo:

@@ -82,6 +82,21 @@ try {
             maintenance = rawMaintenance
         }
 
+        const rawOwners = rawConfig.get("owners")
+        const owners: string[] = []
+
+        if (rawOwners !== undefined) {
+            if (!isSeq(rawOwners)) throw new QixingError("CONFIG", "Pair must be a sequence at 'owners'")
+
+            for (let i = 0; i < rawOwners.items.length; i++) {
+                const owner = rawOwners.get(i)
+
+                if (validateString(owner, `owners.${i}`)) {
+                    owners.push(resolveString(owner))
+                }
+            }
+        }
+
         const rawMongo = rawConfig.get("mongo")
         let mongo: Mongo | undefined
 
@@ -121,6 +136,7 @@ try {
             nodes,
             embedColor,
             maintenance,
+            owners,
             mongo
         }
     } catch (err) {
@@ -135,6 +151,7 @@ export interface Config {
     nodes: Node[]
     embedColor: string
     maintenance: boolean
+    owners: string[]
     mongo?: Mongo
 }
 
