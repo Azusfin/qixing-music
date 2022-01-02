@@ -44,4 +44,4 @@ mongo:
   database: qixing-music
   # The mongo collection name used
   # Optional
-  collection: queue
+  collection: player

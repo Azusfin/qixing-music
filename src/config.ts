@@ -118,7 +118,7 @@ try {
             }
 
             const rawCollection = rawMongo.get("collection")
-            let collection = "queue"
+            let collection = "player"
 
             if (rawCollection !== undefined && validateString(rawCollection, "mongo.collection")) {
                 collection = resolveString(rawCollection)
