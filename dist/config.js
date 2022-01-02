@@ -72,12 +72,25 @@ if (rawOwners !== undefined) {
         }
     }
 }
+const rawServers = rawConfig.get("servers");
+const servers = [];
+if (rawServers !== undefined) {
+    if (!(0, yaml_1.isSeq)(rawServers))
+        throw new QixingError_1.QixingError("CONFIG", "Pair must be a sequence at 'servers'");
+    for (let i = 0; i < rawServers.items.length; i++) {
+        const server = rawServers.get(i);
+        if (validateString(server, `servers.${i}`)) {
+            servers.push(resolveString(server));
+        }
+    }
+}
 exports.config = {
     token,
     nodes,
     embedColor,
     maintenance,
-    owners
+    owners,
+    servers
 };
 function resolveString(str) {
     return str.replace(envRegex, (_, rawEnvname) => {

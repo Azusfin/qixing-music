@@ -9,8 +9,8 @@ import { config } from "../config"
     once: true
 })
 export class ReadyEvent extends Listener {
-    async run(): Promise<void> {
-        this.container.logger.info("Configs loaded")
+    public override async run(): Promise<void> {
+        this.container.logger.info("Configurations Loaded")
 
         const developerID = await this.container.client.application!.fetch()
 
@@ -22,14 +22,14 @@ export class ReadyEvent extends Listener {
             config.owners.push(developerID.owner!.id)
         }
 
-        this.container.logger.info("Application info fetched")
+        this.container.logger.info("Application Info Fetched")
 
         this.container.client.user!.setActivity({
             name: "💜 /help",
             type: "WATCHING"
         })
 
-        this.container.logger.info("Activity has been set")
+        this.container.logger.info("Activity Has Been Set")
 
         const lava = new CoffeeLava({
             balanceLoad: "lavalink",
@@ -87,7 +87,7 @@ export class ReadyEvent extends Listener {
             const embed = new MessageEmbed()
                 .setTitle("Replay Error")
                 .setDescription("Failed to replay player after disconnected from node")
-                .setColor("RED")
+                .setColor(config.embedColor)
 
             this.container.logger.error(
                 "ReplayError:", player.options.guildID,
@@ -148,7 +148,7 @@ export class ReadyEvent extends Listener {
                 .setTitle("Track Stuck")
                 .setDescription(`[${track.title}](${(track as CoffeeTrack).url})`)
                 .addFields({ name: "Threshold", value: `${payload.thresholdMs}ms` })
-                .setColor("ORANGE")
+                .setColor(config.embedColor)
 
             this.container.logger.info(
                 "TrackStuck:", player.options.guildID,
@@ -178,7 +178,7 @@ export class ReadyEvent extends Listener {
                 .addFields({ name: "Cause", value: payload.exception.cause })
                 .addFields({ name: "Severity", value: payload.exception.severity })
                 .addFields({ name: "Error", value: `\`\`\`\n${payload.exception.message}\`\`\`` })
-                .setColor("RED")
+                .setColor(config.embedColor)
 
             this.container.logger.info(
                 "TrackError:", player.options.guildID,
@@ -209,6 +209,6 @@ export class ReadyEvent extends Listener {
         }
 
         this.container.client.lava = lava
-        this.container.logger.info(`Logged in ${this.container.client.user!.tag}`)
+        this.container.logger.info(`Logged In Client ${this.container.client.user!.tag}`)
     }
 }

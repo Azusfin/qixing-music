@@ -14,7 +14,7 @@ const lavacoffee_1 = require("lavacoffee");
 const config_1 = require("../config");
 let ReadyEvent = class ReadyEvent extends framework_1.Listener {
     async run() {
-        this.container.logger.info("Configs loaded");
+        this.container.logger.info("Configurations Loaded");
         const developerID = await this.container.client.application.fetch();
         if (developerID.owner instanceof discord_js_1.Team) {
             for (const ownerID of developerID.owner.members.keys()) {
@@ -25,12 +25,12 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
         else if (!config_1.config.owners.includes(developerID.owner.id)) {
             config_1.config.owners.push(developerID.owner.id);
         }
-        this.container.logger.info("Application info fetched");
+        this.container.logger.info("Application Info Fetched");
         this.container.client.user.setActivity({
             name: "💜 /help",
             type: "WATCHING"
         });
-        this.container.logger.info("Activity has been set");
+        this.container.logger.info("Activity Has Been Set");
         const lava = new lavacoffee_1.CoffeeLava({
             balanceLoad: "lavalink",
             clientName: "qixing-music-lavacoffee",
@@ -72,7 +72,7 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
             const embed = new discord_js_1.MessageEmbed()
                 .setTitle("Replay Error")
                 .setDescription("Failed to replay player after disconnected from node")
-                .setColor("RED");
+                .setColor(config_1.config.embedColor);
             this.container.logger.error("ReplayError:", player.options.guildID, "-", error);
             try {
                 const text = player.get("text");
@@ -109,7 +109,7 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
                 .setTitle("Track Stuck")
                 .setDescription(`[${track.title}](${track.url})`)
                 .addFields({ name: "Threshold", value: `${payload.thresholdMs}ms` })
-                .setColor("ORANGE");
+                .setColor(config_1.config.embedColor);
             this.container.logger.info("TrackStuck:", player.options.guildID, "- Title:", track.title, "- Url:", track.url, "- ThresholdMS:", payload.thresholdMs);
             try {
                 const text = player.get("text");
@@ -128,7 +128,7 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
                 .addFields({ name: "Cause", value: payload.exception.cause })
                 .addFields({ name: "Severity", value: payload.exception.severity })
                 .addFields({ name: "Error", value: `\`\`\`\n${payload.exception.message}\`\`\`` })
-                .setColor("RED");
+                .setColor(config_1.config.embedColor);
             this.container.logger.info("TrackError:", player.options.guildID, "- Title:", track.title, "- Url:", track.url, "- Cause:", payload.exception.cause, "- Severity:", payload.exception.severity, "-", payload.exception.message);
             try {
                 const text = player.get("text");
@@ -146,7 +146,7 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
             });
         }
         this.container.client.lava = lava;
-        this.container.logger.info(`Logged in ${this.container.client.user.tag}`);
+        this.container.logger.info(`Logged In Client ${this.container.client.user.tag}`);
     }
 };
 ReadyEvent = __decorate([
