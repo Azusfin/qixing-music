@@ -92,21 +92,21 @@ try {
             let url!: string
 
             if (validateString(rawUrl, "mongo.url")) {
-                url = rawUrl
+                url = resolveString(rawUrl)
             }
 
             const rawDatabase = rawMongo.get("database")
             let database = "qixing-music"
 
             if (rawDatabase !== undefined && validateString(rawDatabase, "mongo.database")) {
-                database = rawDatabase
+                database = resolveString(rawDatabase)
             }
 
             const rawCollection = rawMongo.get("collection")
             let collection = "queue"
 
             if (rawCollection !== undefined && validateString(rawCollection, "mongo.collection")) {
-                collection = rawCollection
+                collection = resolveString(rawCollection)
             }
 
             mongo = {
