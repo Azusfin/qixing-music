@@ -1,5 +1,5 @@
 import { ApplyOptions } from "@sapphire/decorators"
-import { Precondition, PreconditionOptions } from "@sapphire/framework"
+import { Precondition, PreconditionOptions, PreconditionResult } from "@sapphire/framework"
 import { CommandInteraction } from "discord.js"
 import { config } from "../config"
 
@@ -7,7 +7,7 @@ import { config } from "../config"
     name: "allowMaintenance"
 })
 export class Maintenance extends Precondition {
-    public override chatInputRun(interaction: CommandInteraction) {
+    public override chatInputRun(interaction: CommandInteraction): PreconditionResult {
         return config.maintenance && !config.owners.includes(interaction.user.id)
             ? this.error({ message: "Bot is in maintenance state, only owners can use it currently" })
             : this.ok()
