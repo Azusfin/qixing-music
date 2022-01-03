@@ -13,7 +13,7 @@ const discord_js_1 = require("discord.js");
 const config_1 = require("../config");
 let CommandDeniedEvent = class CommandDeniedEvent extends framework_1.Listener {
     run({ context, message: content }, { interaction, command }) {
-        this.container.logger.info("Command Denied:", command.name, "- User:", interaction.user.id, "- Channel:", interaction.channel?.id ?? "DM", "- Guild:", interaction.guild?.id ?? "N/A");
+        this.container.logger.warn("Command Denied:", command.name, "- User:", interaction.user.id, "- Channel:", interaction.channel?.id ?? "DM", "- Guild:", interaction.guild?.id ?? "N/A");
         if (Reflect.get(Object(context), "silent"))
             return;
         void interaction.reply({

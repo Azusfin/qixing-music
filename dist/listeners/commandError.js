@@ -13,7 +13,7 @@ const discord_js_1 = require("discord.js");
 const config_1 = require("../config");
 let CommandErrorEvent = class CommandErrorEvent extends framework_1.Listener {
     run(error, { interaction, command }) {
-        this.container.logger.info("Command Error:", command.name, "- User:", interaction.user.id, "- Channel:", interaction.channel?.id ?? "DM", "- Guild:", interaction.guild?.id ?? "N/A", "-", error);
+        this.container.logger.error("Command Error:", command.name, "- User:", interaction.user.id, "- Channel:", interaction.channel?.id ?? "DM", "- Guild:", interaction.guild?.id ?? "N/A");
         void interaction.reply({
             ephemeral: true,
             embeds: [

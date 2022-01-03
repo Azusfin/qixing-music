@@ -143,7 +143,8 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
             lava.add({
                 ...node,
                 maxConnections: 25,
-                retryAmount: Infinity
+                retryAmount: Infinity,
+                retryDelay: 60e3
             });
         }
         this.container.client.lava = lava;

@@ -210,7 +210,8 @@ export class ReadyEvent extends Listener {
             lava.add({
                 ...node,
                 maxConnections: 25,
-                retryAmount: Infinity
+                retryAmount: Infinity,
+                retryDelay: 60e3
             })
         }
 

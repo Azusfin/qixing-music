@@ -11,12 +11,11 @@ export class CommandErrorEvent extends Listener {
         error: unknown,
         { interaction, command }: ChatInputCommandErrorPayload
     ): void {
-        this.container.logger.info(
+        this.container.logger.error(
             "Command Error:", command.name,
             "- User:", interaction.user.id,
             "- Channel:", interaction.channel?.id ?? "DM",
-            "- Guild:", interaction.guild?.id ?? "N/A",
-            "-", error
+            "- Guild:", interaction.guild?.id ?? "N/A"
         )
 
         void interaction.reply({

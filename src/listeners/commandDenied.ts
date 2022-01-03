@@ -11,7 +11,7 @@ export class CommandDeniedEvent extends Listener {
         { context, message: content }: UserError,
         { interaction, command }: ChatInputCommandDeniedPayload
     ): void {
-        this.container.logger.info(
+        this.container.logger.warn(
             "Command Denied:", command.name,
             "- User:", interaction.user.id,
             "- Channel:", interaction.channel?.id ?? "DM",
