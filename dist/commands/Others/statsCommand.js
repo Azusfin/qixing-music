@@ -68,11 +68,11 @@ let statsCommand = class statsCommand extends framework_1.Command {
             value: owners
         }, {
             name: "Memory",
-            value: `OS: \`${memoryOs}MiB\`\n` +
-                `JsTotal: \`${memoryJsTotal}MiB\`\n` +
-                `JsUsed: \`${memoryJsUsed}MiB\`\n` +
-                `C++: \`${memoryCpp}MiB\`\n` +
-                `Buffers: \`${memoryBuffers}MiB\``
+            value: `\`\`\`\nOS: ${memoryOs}MiB\n` +
+                `JsTotal: ${memoryJsTotal}MiB\n` +
+                `JsUsed: ${memoryJsUsed}MiB\n` +
+                `C++: ${memoryCpp}MiB\n` +
+                `Buffers: ${memoryBuffers}MiB\`\`\``
         })
             .setColor(config_1.config.embedColor);
         await interaction.reply({
