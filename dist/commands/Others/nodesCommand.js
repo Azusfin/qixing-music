@@ -69,7 +69,7 @@ let NodesCommand = class NodesCommand extends framework_1.Command {
                     `Uptime: ${(0, humanize_duration_1.default)(node.stats.uptime, { maxDecimalPoints: 0 })}\n` +
                     `Memory: ${Number((node.stats.memory.used / 1024 / 1024).toFixed(2)).toLocaleString("en-us")}MiB\n` +
                     `CPU: ${((node.stats.cpu.lavalinkLoad / node.stats.cpu.cores) * 100).toFixed(2)}%\n` +
-                    `Last Updated: ${(0, humanize_duration_1.default)(Date.now() - node.stats.lastUpdated, { maxDecimalPoints: 0 })}`
+                    `Last Updated: ${(0, humanize_duration_1.default)(Date.now() - node.stats.lastUpdated, { maxDecimalPoints: 0 })} ago`
                 : "Not Connected (N/A)"}\n\`\`\``
         }));
         return new discord_js_1.MessageEmbed()

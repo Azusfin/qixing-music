@@ -71,7 +71,7 @@ export class NodesCommand extends Command {
                         `Uptime: ${humanize(node.stats.uptime, { maxDecimalPoints: 0 })}\n` +
                         `Memory: ${Number((node.stats.memory.used / 1024 / 1024).toFixed(2)).toLocaleString("en-us")}MiB\n` +
                         `CPU: ${((node.stats.cpu.lavalinkLoad / node.stats.cpu.cores) * 100).toFixed(2)}%\n` +
-                        `Last Updated: ${humanize(Date.now() - node.stats.lastUpdated, { maxDecimalPoints: 0 })}`
+                        `Last Updated: ${humanize(Date.now() - node.stats.lastUpdated, { maxDecimalPoints: 0 })} ago`
                     : "Not Connected (N/A)"
             }\n\`\`\``
         }))
