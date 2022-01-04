@@ -45,7 +45,11 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
             }
         });
         this.container.client.on("raw", payload => {
-            lava.updateVoiceData(payload);
+            try {
+                lava.updateVoiceData(payload);
+                // eslint-disable-next-line no-empty
+            }
+            catch { }
         });
         lava.init(this.container.client.user.id);
         lava.on("nodeCreate", node => this.container.logger.info("LavalinkNode Created:", node.options.name));

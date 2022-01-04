@@ -48,7 +48,10 @@ export class ReadyEvent extends Listener {
         })
 
         this.container.client.on("raw", payload => {
-            lava.updateVoiceData(payload as (Utils.VoiceServerUpdate | Utils.VoiceStateUpdate))
+            try {
+                lava.updateVoiceData(payload as (Utils.VoiceServerUpdate | Utils.VoiceStateUpdate))
+            // eslint-disable-next-line no-empty
+            } catch {}
         })
 
         lava.init(this.container.client.user!.id)
