@@ -15,6 +15,31 @@ const Util_1 = require("../../Util");
 let JoinCommand = class JoinCommand extends framework_1.Command {
     async chatInputRun(interaction) {
         const { voice } = interaction.member;
+        const perms = voice.channel.permissionsFor(this.container.client.user, true);
+        if (!perms.has("CONNECT")) {
+            await interaction.reply({
+                ephemeral: true,
+                embeds: [
+                    new discord_js_1.MessageEmbed()
+                        .setTitle("Missing Permission")
+                        .setDescription("The bot missing the **CONNECT** permission in the voice channel")
+                        .setColor(config_1.config.embedColor)
+                ]
+            });
+            return;
+        }
+        else if (!perms.has("SPEAK")) {
+            await interaction.reply({
+                ephemeral: true,
+                embeds: [
+                    new discord_js_1.MessageEmbed()
+                        .setTitle("Missing Permission")
+                        .setDescription("The bot missing the **SPEAK** permission in the voice channel")
+                        .setColor(config_1.config.embedColor)
+                ]
+            });
+            return;
+        }
         const player = this.container.client.lava.create({
             guildID: interaction.guildId,
             metadata: {
