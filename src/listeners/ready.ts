@@ -1,6 +1,7 @@
 import { ApplyOptions } from "@sapphire/decorators"
 import { Listener, ListenerOptions } from "@sapphire/framework"
-import { Message, MessageEmbed, Team, TextChannel } from "discord.js"
+import { Message, MessageEmbed, Team, TextChannel, User } from "discord.js"
+import humanizeDuration from "humanize-duration"
 import { CoffeeLava, CoffeeTrack, Utils } from "lavacoffee"
 import { config } from "../config"
 
@@ -115,12 +116,24 @@ export class ReadyEvent extends Listener {
             const embed = new MessageEmbed()
                 .setTitle("Track Starting")
                 .setDescription(`[${track.title}](${(track as CoffeeTrack).url})`)
+                .addFields({
+                    name: "Requested By",
+                    value: (track.requester as User).tag,
+                    inline: true
+                }, {
+                    name: "Duration",
+                    value: (track as CoffeeTrack).isStream
+                        ? "(STREAM)"
+                        : humanizeDuration(track.duration!, { maxDecimalPoints: 0 }),
+                    inline: true
+                })
                 .setColor(config.embedColor)
 
             this.container.logger.info(
                 "TrackStart:", player.options.guildID,
                 "- Title:", track.title,
-                "- Url:", (track as CoffeeTrack).url
+                "- Url:", (track as CoffeeTrack).url,
+                "- Requester", (track.requester as User).id
             )
 
             try {
@@ -142,7 +155,8 @@ export class ReadyEvent extends Listener {
             this.container.logger.info(
                 "TrackEnd:", player.options.guildID,
                 "- Title:", track.title,
-                "- Url:", (track as CoffeeTrack).url
+                "- Url:", (track as CoffeeTrack).url,
+                "- Requester", (track.requester as User).id
             )
         })
 
@@ -160,6 +174,7 @@ export class ReadyEvent extends Listener {
                 "TrackStuck:", player.options.guildID,
                 "- Title:", track.title,
                 "- Url:", (track as CoffeeTrack).url,
+                "- Requester", (track.requester as User).id,
                 "- ThresholdMS:", payload.thresholdMs
             )
 
@@ -190,6 +205,7 @@ export class ReadyEvent extends Listener {
                 "TrackError:", player.options.guildID,
                 "- Title:", track.title,
                 "- Url:", (track as CoffeeTrack).url,
+                "- Requester", (track.requester as User).id,
                 "- Cause:", payload.exception.cause,
                 "- Severity:", payload.exception.severity,
                 "-", payload.exception.message

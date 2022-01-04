@@ -5,11 +5,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReadyEvent = void 0;
 const decorators_1 = require("@sapphire/decorators");
 const framework_1 = require("@sapphire/framework");
 const discord_js_1 = require("discord.js");
+const humanize_duration_1 = __importDefault(require("humanize-duration"));
 const lavacoffee_1 = require("lavacoffee");
 const config_1 = require("../config");
 let ReadyEvent = class ReadyEvent extends framework_1.Listener {
@@ -87,8 +91,19 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
             const embed = new discord_js_1.MessageEmbed()
                 .setTitle("Track Starting")
                 .setDescription(`[${track.title}](${track.url})`)
+                .addFields({
+                name: "Requested By",
+                value: track.requester.tag,
+                inline: true
+            }, {
+                name: "Duration",
+                value: track.isStream
+                    ? "(STREAM)"
+                    : (0, humanize_duration_1.default)(track.duration, { maxDecimalPoints: 0 }),
+                inline: true
+            })
                 .setColor(config_1.config.embedColor);
-            this.container.logger.info("TrackStart:", player.options.guildID, "- Title:", track.title, "- Url:", track.url);
+            this.container.logger.info("TrackStart:", player.options.guildID, "- Title:", track.title, "- Url:", track.url, "- Requester", track.requester.id);
             try {
                 const text = player.get("text");
                 const msg = await text.send({ embeds: [embed] });
@@ -101,7 +116,7 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
         lava.on("trackEnd", async (player, track) => {
             const msg = player.get("msg");
             await msg?.delete();
-            this.container.logger.info("TrackEnd:", player.options.guildID, "- Title:", track.title, "- Url:", track.url);
+            this.container.logger.info("TrackEnd:", player.options.guildID, "- Title:", track.title, "- Url:", track.url, "- Requester", track.requester.id);
         });
         lava.on("trackStuck", async (player, track, payload) => {
             const msg = player.get("msg");
@@ -111,7 +126,7 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
                 .setDescription(`[${track.title}](${track.url})`)
                 .addFields({ name: "Threshold", value: `${payload.thresholdMs}ms` })
                 .setColor(config_1.config.embedColor);
-            this.container.logger.info("TrackStuck:", player.options.guildID, "- Title:", track.title, "- Url:", track.url, "- ThresholdMS:", payload.thresholdMs);
+            this.container.logger.info("TrackStuck:", player.options.guildID, "- Title:", track.title, "- Url:", track.url, "- Requester", track.requester.id, "- ThresholdMS:", payload.thresholdMs);
             try {
                 const text = player.get("text");
                 await text.send({ embeds: [embed] });
@@ -130,7 +145,7 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
                 .addFields({ name: "Severity", value: payload.exception.severity })
                 .addFields({ name: "Error", value: `\`\`\`\n${payload.exception.message}\`\`\`` })
                 .setColor(config_1.config.embedColor);
-            this.container.logger.info("TrackError:", player.options.guildID, "- Title:", track.title, "- Url:", track.url, "- Cause:", payload.exception.cause, "- Severity:", payload.exception.severity, "-", payload.exception.message);
+            this.container.logger.info("TrackError:", player.options.guildID, "- Title:", track.title, "- Url:", track.url, "- Requester", track.requester.id, "- Cause:", payload.exception.cause, "- Severity:", payload.exception.severity, "-", payload.exception.message);
             try {
                 const text = player.get("text");
                 await text.send({ embeds: [embed] });
