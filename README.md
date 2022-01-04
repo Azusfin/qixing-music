@@ -6,4 +6,4 @@ QixingMusic © [Azusfin](https://github.com/Azusfin) authored and maintained by 
 
 ## Keqing
 
-![KEQING](https://raw.githubusercontent.com/Azusfin/qixing-music/main/assets/keqing.jpg)
+![KEQING](https://cdn.discordapp.com/attachments/789656208276848682/927559238224592916/Z.jpg)
