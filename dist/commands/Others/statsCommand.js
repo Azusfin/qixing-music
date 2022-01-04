@@ -25,8 +25,7 @@ let statsCommand = class statsCommand extends framework_1.Command {
         const users = this.container.client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0);
         const uptime = (0, humanize_duration_1.default)(Date.now() - this.container.client.readyTimestamp, { maxDecimalPoints: 0 });
         const library = "Discord.js";
-        const framework = "Sapphire";
-        const owners = config_1.config.owners.map(ownerID => `- ${this.container.client.users.cache.get(ownerID)?.tag ?? `${ownerID} (N/A)`}`).join("\n");
+        const owners = config_1.config.owners.map(ownerID => this.container.client.users.cache.get(ownerID)?.tag ?? `${ownerID} (N/A)`).join("\n");
         const memory = process.memoryUsage();
         const memoryOs = (memory.rss / 1024 / 1024).toFixed(2);
         const memoryJsTotal = (memory.heapTotal / 1024 / 1024).toFixed(2);
@@ -60,12 +59,8 @@ let statsCommand = class statsCommand extends framework_1.Command {
             value: library,
             inline: true
         }, {
-            name: "Framework",
-            value: framework,
-            inline: true
-        }, {
             name: "Owners",
-            value: owners
+            value: `\`\`\`\n${owners}\`\`\``
         }, {
             name: "Memory",
             value: `\`\`\`\nOS: ${memoryOs}MiB\n` +

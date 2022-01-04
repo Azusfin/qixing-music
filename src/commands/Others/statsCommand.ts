@@ -19,7 +19,7 @@ export class statsCommand extends Command {
         const uptime = humanize(Date.now() - this.container.client.readyTimestamp!, { maxDecimalPoints: 0 })
         const library = "Discord.js"
         const owners = config.owners.map(
-            ownerID => `- ${this.container.client.users.cache.get(ownerID)?.tag ?? `${ownerID} (N/A)`}`
+            ownerID => this.container.client.users.cache.get(ownerID)?.tag ?? `${ownerID} (N/A)`
         ).join("\n")
 
         const memory = process.memoryUsage()
