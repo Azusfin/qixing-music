@@ -18,7 +18,6 @@ export class statsCommand extends Command {
         const users = this.container.client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)
         const uptime = humanize(Date.now() - this.container.client.readyTimestamp!, { maxDecimalPoints: 0 })
         const library = "Discord.js"
-        const framework = "Sapphire"
         const owners = config.owners.map(
             ownerID => `- ${this.container.client.users.cache.get(ownerID)?.tag ?? `${ownerID} (N/A)`}`
         ).join("\n")
@@ -57,12 +56,8 @@ export class statsCommand extends Command {
                 value: library,
                 inline: true
             }, {
-                name: "Framework",
-                value: framework,
-                inline: true
-            }, {
                 name: "Owners",
-                value: owners
+                value: `\`\`\`\n${owners}\`\`\``
             }, {
                 name: "Memory",
                 value: `\`\`\`\nOS: ${memoryOs}MiB\n` +
