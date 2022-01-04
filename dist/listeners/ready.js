@@ -107,7 +107,7 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
                 inline: true
             })
                 .setColor(config_1.config.embedColor);
-            this.container.logger.info("TrackStart:", player.options.guildID, "- Title:", track.title, "- Url:", track.url, "- Requester", track.requester.id);
+            this.container.logger.info("TrackStart:", player.options.guildID, "- Requester:", track.requester.id, "- Title:", track.title, "- Url:", track.url);
             try {
                 const text = player.get("text");
                 const msg = await text.send({ embeds: [embed] });
@@ -118,11 +118,12 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
             }
         });
         lava.on("trackEnd", async (player, track) => {
+            this.container.logger.info("TrackEnd:", player.options.guildID, "- Requester:", track.requester.id, "- Title:", track.title, "- Url:", track.url);
             const msg = player.get("msg");
             await msg?.delete();
-            this.container.logger.info("TrackEnd:", player.options.guildID, "- Title:", track.title, "- Url:", track.url, "- Requester", track.requester.id);
         });
         lava.on("trackStuck", async (player, track, payload) => {
+            this.container.logger.info("TrackStuck:", player.options.guildID, "- Requester:", track.requester.id, "- Title:", track.title, "- Url:", track.url, "- ThresholdMS:", payload.thresholdMs);
             const msg = player.get("msg");
             await msg?.delete();
             const embed = new discord_js_1.MessageEmbed()
@@ -130,7 +131,6 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
                 .setDescription(`[${track.title}](${track.url})`)
                 .addFields({ name: "Threshold", value: `${payload.thresholdMs}ms` })
                 .setColor(config_1.config.embedColor);
-            this.container.logger.info("TrackStuck:", player.options.guildID, "- Title:", track.title, "- Url:", track.url, "- Requester", track.requester.id, "- ThresholdMS:", payload.thresholdMs);
             try {
                 const text = player.get("text");
                 await text.send({ embeds: [embed] });
@@ -140,6 +140,7 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
             }
         });
         lava.on("trackError", async (player, track, payload) => {
+            this.container.logger.info("TrackError:", player.options.guildID, "- Requester:", track.requester.id, "- Title:", track.title, "- Url:", track.url, "- Cause:", payload.exception.cause, "- Severity:", payload.exception.severity, "-", payload.exception.message);
             const msg = player.get("msg");
             await msg?.delete();
             const embed = new discord_js_1.MessageEmbed()
@@ -149,7 +150,6 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
                 .addFields({ name: "Severity", value: payload.exception.severity })
                 .addFields({ name: "Error", value: `\`\`\`\n${payload.exception.message}\`\`\`` })
                 .setColor(config_1.config.embedColor);
-            this.container.logger.info("TrackError:", player.options.guildID, "- Title:", track.title, "- Url:", track.url, "- Requester", track.requester.id, "- Cause:", payload.exception.cause, "- Severity:", payload.exception.severity, "-", payload.exception.message);
             try {
                 const text = player.get("text");
                 await text.send({ embeds: [embed] });

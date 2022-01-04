@@ -7,7 +7,7 @@ import { registerCommands } from "../../Util";
 @ApplyOptions<CommandOptions>({
     name: "join",
     description: "Make the bot join a voice channel",
-    preconditions: ["allowMaintenance", "GuildOnly", "inVoiceChannel", "manageChannels"]
+    preconditions: ["allowMaintenance", "GuildOnly", "inVoiceChannelAndPermitted", "manageChannels"]
 })
 export class JoinCommand extends Command {
     public override async chatInputRun(interaction: CommandInteraction): Promise<void> {

@@ -3,27 +3,28 @@ import { Precondition, PreconditionOptions, PreconditionResult } from "@sapphire
 import { CommandInteraction, GuildMember } from "discord.js";
 
 @ApplyOptions<PreconditionOptions>({
-    name: "inVoiceChannel"
+    name: "inVoiceChannelAndPermitted"
 })
-export class InVoiceChannel extends Precondition {
+export class InVoiceChannelAndPermitted extends Precondition {
     public override chatInputRun(interaction: CommandInteraction): PreconditionResult {
-        const memberVoice = (interaction.member as GuildMember).voice
+        const memberVoice = (interaction.member! as GuildMember).voice
         const botVoice = interaction.guild!.me!.voice
 
         const isMemberInVoice = memberVoice.channelId !== null
         const isBotInVoice = botVoice.channelId !== null
-        const isSameVoice = botVoice.channel?.members.has(interaction.user.id)
+        const isNoOneInVC = !botVoice.channel?.members.filter(m => !m.user.bot).size
+        const isHasPermission = interaction.memberPermissions?.has("MANAGE_CHANNELS", true)
 
         return !isMemberInVoice
             ? this.error({ message: "You need to be in a voice channel" })
-            : (isBotInVoice ? isSameVoice : true)
+            : (isBotInVoice ? (isNoOneInVC || isHasPermission) : true)
                 ? this.ok()
-                : this.error({ message: "You need to be in the same channel as the bot" })
+                : this.error({ message: "You need to have **MANAGE_CHANNELS** permission" })
     }
 }
 
 declare module "@sapphire/framework" {
     export interface Preconditions {
-        inVoiceChannel: never
+        inVoiceChannelAndPermitted: never
     }
 }

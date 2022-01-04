@@ -53,7 +53,7 @@ JoinCommand = __decorate([
     (0, decorators_1.ApplyOptions)({
         name: "join",
         description: "Make the bot join a voice channel",
-        preconditions: ["allowMaintenance", "GuildOnly", "inVoiceChannel", "manageChannels"]
+        preconditions: ["allowMaintenance", "GuildOnly", "inVoiceChannelAndPermitted", "manageChannels"]
     })
 ], JoinCommand);
 exports.JoinCommand = JoinCommand;

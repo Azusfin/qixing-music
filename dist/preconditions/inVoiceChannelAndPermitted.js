@@ -6,26 +6,27 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.InVoiceChannel = void 0;
+exports.InVoiceChannelAndPermitted = void 0;
 const decorators_1 = require("@sapphire/decorators");
 const framework_1 = require("@sapphire/framework");
-let InVoiceChannel = class InVoiceChannel extends framework_1.Precondition {
+let InVoiceChannelAndPermitted = class InVoiceChannelAndPermitted extends framework_1.Precondition {
     chatInputRun(interaction) {
         const memberVoice = interaction.member.voice;
         const botVoice = interaction.guild.me.voice;
         const isMemberInVoice = memberVoice.channelId !== null;
         const isBotInVoice = botVoice.channelId !== null;
-        const isSameVoice = botVoice.channel?.members.has(interaction.user.id);
+        const isNoOneInVC = !botVoice.channel?.members.filter(m => !m.user.bot).size;
+        const isHasPermission = interaction.memberPermissions?.has("MANAGE_CHANNELS", true);
         return !isMemberInVoice
             ? this.error({ message: "You need to be in a voice channel" })
-            : (isBotInVoice ? isSameVoice : true)
+            : (isBotInVoice ? (isNoOneInVC || isHasPermission) : true)
                 ? this.ok()
-                : this.error({ message: "You need to be in the same channel as the bot" });
+                : this.error({ message: "You need to have **MANAGE_CHANNELS** permission" });
     }
 };
-InVoiceChannel = __decorate([
+InVoiceChannelAndPermitted = __decorate([
     (0, decorators_1.ApplyOptions)({
-        name: "inVoiceChannel"
+        name: "inVoiceChannelAndPermitted"
     })
-], InVoiceChannel);
-exports.InVoiceChannel = InVoiceChannel;
+], InVoiceChannelAndPermitted);
+exports.InVoiceChannelAndPermitted = InVoiceChannelAndPermitted;

@@ -134,9 +134,9 @@ export class ReadyEvent extends Listener {
 
             this.container.logger.info(
                 "TrackStart:", player.options.guildID,
+                "- Requester:", (track.requester as User).id,
                 "- Title:", track.title,
-                "- Url:", (track as CoffeeTrack).url,
-                "- Requester", (track.requester as User).id
+                "- Url:", (track as CoffeeTrack).url
             )
 
             try {
@@ -152,18 +152,26 @@ export class ReadyEvent extends Listener {
         })
 
         lava.on("trackEnd", async (player, track) => {
-            const msg = player.get<Message>("msg")
-            await msg?.delete()
-
             this.container.logger.info(
                 "TrackEnd:", player.options.guildID,
+                "- Requester:", (track.requester as User).id,
                 "- Title:", track.title,
-                "- Url:", (track as CoffeeTrack).url,
-                "- Requester", (track.requester as User).id
+                "- Url:", (track as CoffeeTrack).url
             )
+
+            const msg = player.get<Message>("msg")
+            await msg?.delete()
         })
 
         lava.on("trackStuck", async (player, track, payload) => {
+            this.container.logger.info(
+                "TrackStuck:", player.options.guildID,
+                "- Requester:", (track.requester as User).id,
+                "- Title:", track.title,
+                "- Url:", (track as CoffeeTrack).url,
+                "- ThresholdMS:", payload.thresholdMs
+            )
+
             const msg = player.get<Message>("msg")
             await msg?.delete()
 
@@ -172,14 +180,6 @@ export class ReadyEvent extends Listener {
                 .setDescription(`[${track.title}](${(track as CoffeeTrack).url})`)
                 .addFields({ name: "Threshold", value: `${payload.thresholdMs}ms` })
                 .setColor(config.embedColor)
-
-            this.container.logger.info(
-                "TrackStuck:", player.options.guildID,
-                "- Title:", track.title,
-                "- Url:", (track as CoffeeTrack).url,
-                "- Requester", (track.requester as User).id,
-                "- ThresholdMS:", payload.thresholdMs
-            )
 
             try {
                 const text = player.get<TextChannel>("text")
@@ -193,6 +193,16 @@ export class ReadyEvent extends Listener {
         })
 
         lava.on("trackError", async (player, track, payload) => {
+            this.container.logger.info(
+                "TrackError:", player.options.guildID,
+                "- Requester:", (track.requester as User).id,
+                "- Title:", track.title,
+                "- Url:", (track as CoffeeTrack).url,
+                "- Cause:", payload.exception.cause,
+                "- Severity:", payload.exception.severity,
+                "-", payload.exception.message
+            )
+
             const msg = player.get<Message>("msg")
             await msg?.delete()
 
@@ -203,16 +213,6 @@ export class ReadyEvent extends Listener {
                 .addFields({ name: "Severity", value: payload.exception.severity })
                 .addFields({ name: "Error", value: `\`\`\`\n${payload.exception.message}\`\`\`` })
                 .setColor(config.embedColor)
-
-            this.container.logger.info(
-                "TrackError:", player.options.guildID,
-                "- Title:", track.title,
-                "- Url:", (track as CoffeeTrack).url,
-                "- Requester", (track.requester as User).id,
-                "- Cause:", payload.exception.cause,
-                "- Severity:", payload.exception.severity,
-                "-", payload.exception.message
-            )
 
             try {
                 const text = player.get<TextChannel>("text")
