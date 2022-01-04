@@ -6,7 +6,7 @@ import { registerCommands } from "../../Util";
 import { config } from "../../config";
 import humanize from "humanize-duration"
 
-const pageItems = 10
+const pageItems = 2
 
 @ApplyOptions<CommandOptions>({
     name: "nodes",

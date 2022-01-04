@@ -16,7 +16,7 @@ const discord_js_1 = require("discord.js");
 const Util_1 = require("../../Util");
 const config_1 = require("../../config");
 const humanize_duration_1 = __importDefault(require("humanize-duration"));
-const pageItems = 10;
+const pageItems = 2;
 let NodesCommand = class NodesCommand extends framework_1.Command {
     async chatInputRun(interaction) {
         const nodes = [...this.container.client.lava.nodes.values()];
