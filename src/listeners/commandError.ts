@@ -8,7 +8,7 @@ import { config } from "../config";
 })
 export class CommandErrorEvent extends Listener {
     public override run(
-        error: unknown,
+        _: unknown,
         { interaction, command }: ChatInputCommandErrorPayload
     ): void {
         this.container.logger.error(
@@ -18,13 +18,17 @@ export class CommandErrorEvent extends Listener {
             "- Guild:", interaction.guild?.id ?? "N/A"
         )
 
-        void interaction.reply({
-            ephemeral: true,
-            embeds: [
-                new MessageEmbed()
-                    .setDescription("There's an error when running the command")
-                    .setColor(config.embedColor)
-            ]
-        })
+        const embed = new MessageEmbed()
+            .setDescription("There's an error when running the command")
+            .setColor(config.embedColor)
+
+        if (!interaction.deferred) {
+            void interaction.reply({
+                ephemeral: true,
+                embeds: [embed]
+            })
+        } else {
+            void interaction.editReply({ content: null, embeds: [embed], components: [] })
+        }
     }
 }

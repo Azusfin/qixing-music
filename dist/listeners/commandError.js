@@ -12,16 +12,20 @@ const framework_1 = require("@sapphire/framework");
 const discord_js_1 = require("discord.js");
 const config_1 = require("../config");
 let CommandErrorEvent = class CommandErrorEvent extends framework_1.Listener {
-    run(error, { interaction, command }) {
+    run(_, { interaction, command }) {
         this.container.logger.error("Command Error:", command.name, "- User:", interaction.user.id, "- Channel:", interaction.channel?.id ?? "DM", "- Guild:", interaction.guild?.id ?? "N/A");
-        void interaction.reply({
-            ephemeral: true,
-            embeds: [
-                new discord_js_1.MessageEmbed()
-                    .setDescription("There's an error when running the command")
-                    .setColor(config_1.config.embedColor)
-            ]
-        });
+        const embed = new discord_js_1.MessageEmbed()
+            .setDescription("There's an error when running the command")
+            .setColor(config_1.config.embedColor);
+        if (!interaction.deferred) {
+            void interaction.reply({
+                ephemeral: true,
+                embeds: [embed]
+            });
+        }
+        else {
+            void interaction.editReply({ content: null, embeds: [embed], components: [] });
+        }
     }
 };
 CommandErrorEvent = __decorate([
