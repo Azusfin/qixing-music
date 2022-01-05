@@ -85,11 +85,6 @@ let NodesCommand = class NodesCommand extends framework_1.Command {
             .setEmoji("⬅️")
             .setStyle("PRIMARY")
             .setDisabled(end || !page);
-        const refresh = new discord_js_1.MessageButton()
-            .setCustomId("nodes-refresh")
-            .setEmoji("🔄")
-            .setStyle("PRIMARY")
-            .setDisabled(end);
         const next = new discord_js_1.MessageButton()
             .setCustomId("nodes-next")
             .setEmoji("➡️")
@@ -97,7 +92,7 @@ let NodesCommand = class NodesCommand extends framework_1.Command {
             .setDisabled(end || (page * pageItems) + pageItems >= allNodes.length);
         return [
             new discord_js_1.MessageActionRow()
-                .addComponents(previous, refresh, next)
+                .addComponents(previous, next)
         ];
     }
 };

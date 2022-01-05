@@ -91,12 +91,6 @@ export class NodesCommand extends Command {
             .setStyle("PRIMARY")
             .setDisabled(end || !page)
 
-        const refresh = new MessageButton()
-            .setCustomId("nodes-refresh")
-            .setEmoji("🔄")
-            .setStyle("PRIMARY")
-            .setDisabled(end)
-
         const next = new MessageButton()
             .setCustomId("nodes-next")
             .setEmoji("➡️")
@@ -105,7 +99,7 @@ export class NodesCommand extends Command {
 
         return [
             new MessageActionRow()
-                .addComponents(previous, refresh, next)
+                .addComponents(previous, next)
         ]
     }
 }
