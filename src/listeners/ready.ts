@@ -120,13 +120,17 @@ export class ReadyEvent extends Listener {
                 .setTitle("Track Starting")
                 .setDescription(`[${track.title}](${(track as CoffeeTrack).url})`)
                 .addFields({
+                    name: "Author",
+                    value: (track as CoffeeTrack).author,
+                    inline: true
+                }, {
                     name: "Requested By",
                     value: (track.requester as User).tag,
                     inline: true
                 }, {
                     name: "Duration",
                     value: (track as CoffeeTrack).isStream
-                        ? "(STREAM)"
+                        ? "N/A"
                         : humanizeDuration(track.duration!, { maxDecimalPoints: 0 }),
                     inline: true
                 })

@@ -96,13 +96,17 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
                 .setTitle("Track Starting")
                 .setDescription(`[${track.title}](${track.url})`)
                 .addFields({
+                name: "Author",
+                value: track.author,
+                inline: true
+            }, {
                 name: "Requested By",
                 value: track.requester.tag,
                 inline: true
             }, {
                 name: "Duration",
                 value: track.isStream
-                    ? "(STREAM)"
+                    ? "N/A"
                     : (0, humanize_duration_1.default)(track.duration, { maxDecimalPoints: 0 }),
                 inline: true
             })
