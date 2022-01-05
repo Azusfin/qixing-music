@@ -14,6 +14,7 @@ const decorators_1 = require("@sapphire/decorators");
 const framework_1 = require("@sapphire/framework");
 const discord_js_1 = require("discord.js");
 const humanize_duration_1 = __importDefault(require("humanize-duration"));
+const lavacoffee_1 = require("lavacoffee");
 const config_1 = require("../../config");
 const Util_1 = require("../../Util");
 let NowPlayingCommand = class NowPlayingCommand extends framework_1.Command {
@@ -24,6 +25,7 @@ let NowPlayingCommand = class NowPlayingCommand extends framework_1.Command {
             .setColor(config_1.config.embedColor);
         if (player.queue.current) {
             const track = player.queue.current;
+            const [bar, percentage] = (0, Util_1.progressBar)(track.isStream ? 1 : track.duration, track.isStream ? 1 : player.absolutePosition, track.url);
             embed
                 .setDescription(`[${track.title}](${track.url})`)
                 .addFields({
@@ -40,6 +42,24 @@ let NowPlayingCommand = class NowPlayingCommand extends framework_1.Command {
                     ? "N/A"
                     : (0, humanize_duration_1.default)(track.duration, { maxDecimalPoints: 0 }),
                 inline: true
+            }, {
+                name: "Loop",
+                value: player.loop === lavacoffee_1.Utils.LoopMode.None
+                    ? "None"
+                    : player.loop === lavacoffee_1.Utils.LoopMode.Queue
+                        ? "Queue"
+                        : "Track",
+                inline: true
+            }, {
+                name: "Volume",
+                value: `${player.options.volume}%`,
+                inline: true
+            }, {
+                name: "Progress",
+                value: `${bar}\n` +
+                    `${track.isStream
+                        ? "N/A"
+                        : `${(0, humanize_duration_1.default)(player.absolutePosition, { maxDecimalPoints: 0 })} (${percentage.toFixed(2)}%)`}`
             });
             const thumbnail = track.displayThumbnail();
             if (thumbnail)

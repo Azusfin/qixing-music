@@ -12,3 +12,23 @@ export function registerCommands(
         registry.registerChatInputCommand(data, { guildIds: config.servers, behaviorWhenNotIdentical: RegisterBehavior.Overwrite })
     }
 }
+
+export function progressBar(
+    total: number,
+    current: number,
+    url: string
+): [string, number] {
+    const percentage = current > total ? 1 : current / total
+    const progress = Math.round(11 * percentage)
+    const emptyProgress = 11 - progress
+
+    const emptyProgressText = "▬".repeat(emptyProgress)
+    const progressText = progress >= 1
+        ? `[▬](${url})`.repeat(progress).replace(/.$/, ")🔘")
+        : "🔘"
+
+    const bar = `${progressText}${emptyProgressText}`
+    const calculated = percentage * 100
+
+    return [bar, calculated]
+}

@@ -2,9 +2,9 @@ import { ApplyOptions } from "@sapphire/decorators";
 import { ApplicationCommandRegistry, Command, CommandOptions } from "@sapphire/framework";
 import { CommandInteraction, MessageEmbed, User } from "discord.js";
 import humanizeDuration from "humanize-duration";
-import { CoffeeTrack } from "lavacoffee";
+import { CoffeeTrack, Utils } from "lavacoffee";
 import { config } from "../../config";
-import { registerCommands } from "../../Util";
+import { progressBar, registerCommands } from "../../Util";
 
 @ApplyOptions<CommandOptions>({
     name: "nowplaying",
@@ -20,6 +20,11 @@ export class NowPlayingCommand extends Command {
 
         if (player.queue.current) {
             const track = player.queue.current as CoffeeTrack
+            const [bar, percentage] = progressBar(
+                track.isStream ? 1 : track.duration,
+                track.isStream ? 1 : player.absolutePosition,
+                track.url
+            )
 
             embed
                 .setDescription(`[${track.title}](${track.url})`)
@@ -37,6 +42,26 @@ export class NowPlayingCommand extends Command {
                         ? "N/A"
                         : humanizeDuration(track.duration, { maxDecimalPoints: 0 }),
                     inline: true
+                }, {
+                    name: "Loop",
+                    value: player.loop === Utils.LoopMode.None
+                        ? "None"
+                        : player.loop === Utils.LoopMode.Queue
+                            ? "Queue"
+                            : "Track",
+                    inline: true
+                }, {
+                    name: "Volume",
+                    value: `${player.options.volume}%`,
+                    inline: true
+                }, {
+                    name: "Progress",
+                    value: `${bar}\n` +
+                        `${track.isStream
+                            ? "N/A"
+                            : `${humanizeDuration(
+                                player.absolutePosition, { maxDecimalPoints: 0 }
+                            )} (${percentage.toFixed(2)}%)`}`
                 })
 
             const thumbnail = track.displayThumbnail()
