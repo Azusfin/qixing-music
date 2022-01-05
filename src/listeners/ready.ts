@@ -164,6 +164,7 @@ export class ReadyEvent extends Listener {
             )
 
             const msg = player.get<Message>("msg")
+            player.set("msg", undefined)
             await msg?.delete()
         })
 
@@ -177,6 +178,7 @@ export class ReadyEvent extends Listener {
             )
 
             const msg = player.get<Message>("msg")
+            player.set("msg", undefined)
             await msg?.delete()
 
             const embed = new MessageEmbed()
@@ -208,6 +210,7 @@ export class ReadyEvent extends Listener {
             )
 
             const msg = player.get<Message>("msg")
+            player.set("msg", undefined)
             await msg?.delete()
 
             const embed = new MessageEmbed()
