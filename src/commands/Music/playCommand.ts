@@ -88,7 +88,7 @@ export class PlayCommand extends Command {
                 success = true
             } catch {
                 embed.setDescription("The prompt has been timed out")
-                await interaction.editReply({ embeds: [embed] })
+                await interaction.editReply({ embeds: [embed], components: [] })
             }
 
             if (!success) return

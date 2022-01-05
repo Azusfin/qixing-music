@@ -76,7 +76,7 @@ let PlayCommand = class PlayCommand extends framework_1.Command {
             }
             catch {
                 embed.setDescription("The prompt has been timed out");
-                await interaction.editReply({ embeds: [embed] });
+                await interaction.editReply({ embeds: [embed], components: [] });
             }
             if (!success)
                 return;
