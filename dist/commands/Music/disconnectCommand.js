@@ -15,6 +15,8 @@ const Util_1 = require("../../Util");
 let DisconnectCommand = class DisconnectCommand extends framework_1.Command {
     async chatInputRun(interaction) {
         const player = this.container.client.lava.get(interaction.guildId);
+        const msg = player.get("msg");
+        await msg?.delete();
         player.destroy();
         const embed = new discord_js_1.MessageEmbed()
             .setTitle("Disconnected")

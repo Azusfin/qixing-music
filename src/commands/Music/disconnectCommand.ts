@@ -1,6 +1,6 @@
 import { ApplyOptions } from "@sapphire/decorators";
 import { ApplicationCommandRegistry, Command, CommandOptions } from "@sapphire/framework";
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import { CommandInteraction, Message, MessageEmbed } from "discord.js";
 import { config } from "../../config";
 import { registerCommands } from "../../Util";
 
@@ -11,8 +11,11 @@ import { registerCommands } from "../../Util";
 })
 export class DisconnectCommand extends Command {
     public override async chatInputRun(interaction: CommandInteraction): Promise<void> {
-        const player = this.container.client.lava.get(interaction.guildId!)
-        player!.destroy()
+        const player = this.container.client.lava.get(interaction.guildId!)!
+        const msg = player.get<Message>("msg")
+
+        await msg?.delete()
+        player.destroy()
 
         const embed = new MessageEmbed()
             .setTitle("Disconnected")
