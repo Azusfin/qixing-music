@@ -2,7 +2,7 @@ import { ApplyOptions } from "@sapphire/decorators";
 import { ApplicationCommandRegistry, Command, CommandOptions } from "@sapphire/framework";
 import { CommandInteraction, Message, MessageButton, MessageEmbed, User } from "discord.js";
 import humanizeDuration from "humanize-duration";
-import { CoffeePlayer, CoffeeTrack, Utils } from "lavacoffee";
+import { CoffeeLava, CoffeeTrack, Utils } from "lavacoffee";
 import { config } from "../../config";
 import { progressBar, registerCommands } from "../../Util";
 
@@ -13,12 +13,12 @@ import { progressBar, registerCommands } from "../../Util";
 })
 export class NowPlayingCommand extends Command {
     public override async chatInputRun(interaction: CommandInteraction): Promise<void> {
-        const player = this.container.client.lava.get(interaction.guildId!)!
+        const { lava } = this.container.client
 
         const msg = await interaction.reply({
             ephemeral: true,
             fetchReply: true,
-            embeds: [this.buildEmbed(player)],
+            embeds: [this.buildEmbed(lava, interaction.guildId!)],
             components: [{
                 type: "ACTION_ROW",
                 components: [
@@ -39,12 +39,12 @@ export class NowPlayingCommand extends Command {
         })
 
         collector.on("collect", buttonInteraction => {
-            void buttonInteraction.update({ embeds: [this.buildEmbed(player)] })
+            void buttonInteraction.update({ embeds: [this.buildEmbed(lava, interaction.guildId!)] })
         })
 
         collector.once("end", () => {
             void interaction.editReply({
-                embeds: [this.buildEmbed(player)],
+                embeds: [this.buildEmbed(lava, interaction.guildId!)],
                 components: [{
                     type: "ACTION_ROW",
                     components: [
@@ -66,12 +66,15 @@ export class NowPlayingCommand extends Command {
         })
     }
 
-    private buildEmbed(player: CoffeePlayer): MessageEmbed {
+    private buildEmbed(lava: CoffeeLava, guildID: string): MessageEmbed {
+        const player = lava.get(guildID)
         const embed = new MessageEmbed()
             .setTitle("Now Playing")
             .setColor(config.embedColor)
 
-        if (player.queue.current) {
+        if (!player) {
+            embed.setDescription("No music player found")
+        } else if (player.queue.current) {
             const track = player.queue.current as CoffeeTrack
             const [bar, percentage] = progressBar(
                 track.isStream ? 1 : track.duration,

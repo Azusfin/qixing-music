@@ -19,11 +19,11 @@ const config_1 = require("../../config");
 const Util_1 = require("../../Util");
 let NowPlayingCommand = class NowPlayingCommand extends framework_1.Command {
     async chatInputRun(interaction) {
-        const player = this.container.client.lava.get(interaction.guildId);
+        const { lava } = this.container.client;
         const msg = await interaction.reply({
             ephemeral: true,
             fetchReply: true,
-            embeds: [this.buildEmbed(player)],
+            embeds: [this.buildEmbed(lava, interaction.guildId)],
             components: [{
                     type: "ACTION_ROW",
                     components: [
@@ -42,11 +42,11 @@ let NowPlayingCommand = class NowPlayingCommand extends framework_1.Command {
             }
         });
         collector.on("collect", buttonInteraction => {
-            void buttonInteraction.update({ embeds: [this.buildEmbed(player)] });
+            void buttonInteraction.update({ embeds: [this.buildEmbed(lava, interaction.guildId)] });
         });
         collector.once("end", () => {
             void interaction.editReply({
-                embeds: [this.buildEmbed(player)],
+                embeds: [this.buildEmbed(lava, interaction.guildId)],
                 components: [{
                         type: "ACTION_ROW",
                         components: [
@@ -66,11 +66,15 @@ let NowPlayingCommand = class NowPlayingCommand extends framework_1.Command {
             description: this.description
         });
     }
-    buildEmbed(player) {
+    buildEmbed(lava, guildID) {
+        const player = lava.get(guildID);
         const embed = new discord_js_1.MessageEmbed()
             .setTitle("Now Playing")
             .setColor(config_1.config.embedColor);
-        if (player.queue.current) {
+        if (!player) {
+            embed.setDescription("No music player found");
+        }
+        else if (player.queue.current) {
             const track = player.queue.current;
             const [bar, percentage] = (0, Util_1.progressBar)(track.isStream ? 1 : track.duration, track.isStream ? 1 : player.absolutePosition, track.url);
             embed
