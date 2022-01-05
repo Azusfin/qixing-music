@@ -20,6 +20,53 @@ const Util_1 = require("../../Util");
 let NowPlayingCommand = class NowPlayingCommand extends framework_1.Command {
     async chatInputRun(interaction) {
         const player = this.container.client.lava.get(interaction.guildId);
+        const msg = await interaction.reply({
+            ephemeral: true,
+            fetchReply: true,
+            embeds: [this.buildEmbed(player)],
+            components: [{
+                    type: "ACTION_ROW",
+                    components: [
+                        new discord_js_1.MessageButton()
+                            .setCustomId("nowplaying-refresh")
+                            .setEmoji("🔄")
+                            .setStyle("PRIMARY")
+                    ]
+                }]
+        });
+        const collector = msg.createMessageComponentCollector({
+            componentType: "BUTTON",
+            time: 120 * 1000,
+            filter(buttonInteraction) {
+                return buttonInteraction.user.id === interaction.user.id;
+            }
+        });
+        collector.on("collect", buttonInteraction => {
+            void buttonInteraction.update({ embeds: [this.buildEmbed(player)] });
+        });
+        collector.once("end", () => {
+            void interaction.editReply({
+                embeds: [this.buildEmbed(player)],
+                components: [{
+                        type: "ACTION_ROW",
+                        components: [
+                            new discord_js_1.MessageButton()
+                                .setCustomId("nowplaying-refresh")
+                                .setEmoji("🔄")
+                                .setStyle("PRIMARY")
+                                .setDisabled(true)
+                        ]
+                    }]
+            });
+        });
+    }
+    registerApplicationCommands(registry) {
+        (0, Util_1.registerCommands)(registry, {
+            name: this.name,
+            description: this.description
+        });
+    }
+    buildEmbed(player) {
         const embed = new discord_js_1.MessageEmbed()
             .setTitle("Now Playing")
             .setColor(config_1.config.embedColor);
@@ -68,16 +115,7 @@ let NowPlayingCommand = class NowPlayingCommand extends framework_1.Command {
         else {
             embed.setDescription("No track is currently playing");
         }
-        await interaction.reply({
-            ephemeral: true,
-            embeds: [embed]
-        });
-    }
-    registerApplicationCommands(registry) {
-        (0, Util_1.registerCommands)(registry, {
-            name: this.name,
-            description: this.description
-        });
+        return embed;
     }
 };
 NowPlayingCommand = __decorate([

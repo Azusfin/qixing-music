@@ -1,8 +1,8 @@
 import { ApplyOptions } from "@sapphire/decorators";
 import { ApplicationCommandRegistry, Command, CommandOptions } from "@sapphire/framework";
-import { CommandInteraction, MessageEmbed, User } from "discord.js";
+import { CommandInteraction, Message, MessageButton, MessageEmbed, User } from "discord.js";
 import humanizeDuration from "humanize-duration";
-import { CoffeeTrack, Utils } from "lavacoffee";
+import { CoffeePlayer, CoffeeTrack, Utils } from "lavacoffee";
 import { config } from "../../config";
 import { progressBar, registerCommands } from "../../Util";
 
@@ -14,6 +14,59 @@ import { progressBar, registerCommands } from "../../Util";
 export class NowPlayingCommand extends Command {
     public override async chatInputRun(interaction: CommandInteraction): Promise<void> {
         const player = this.container.client.lava.get(interaction.guildId!)!
+
+        const msg = await interaction.reply({
+            ephemeral: true,
+            fetchReply: true,
+            embeds: [this.buildEmbed(player)],
+            components: [{
+                type: "ACTION_ROW",
+                components: [
+                    new MessageButton()
+                        .setCustomId("nowplaying-refresh")
+                        .setEmoji("🔄")
+                        .setStyle("PRIMARY")
+                ]
+            }]
+        }) as Message
+
+        const collector = msg.createMessageComponentCollector({
+            componentType: "BUTTON",
+            time: 120 * 1000,
+            filter(buttonInteraction) {
+                return buttonInteraction.user.id === interaction.user.id
+            }
+        })
+
+        collector.on("collect", buttonInteraction => {
+            void buttonInteraction.update({ embeds: [this.buildEmbed(player)] })
+        })
+
+        collector.once("end", () => {
+            void interaction.editReply({
+                embeds: [this.buildEmbed(player)],
+                components: [{
+                    type: "ACTION_ROW",
+                    components: [
+                        new MessageButton()
+                            .setCustomId("nowplaying-refresh")
+                            .setEmoji("🔄")
+                            .setStyle("PRIMARY")
+                            .setDisabled(true)
+                    ]
+                }]
+            })
+        })
+    }
+
+    public override registerApplicationCommands(registry: ApplicationCommandRegistry): void {
+        registerCommands(registry, {
+            name: this.name,
+            description: this.description
+        })
+    }
+
+    private buildEmbed(player: CoffeePlayer): MessageEmbed {
         const embed = new MessageEmbed()
             .setTitle("Now Playing")
             .setColor(config.embedColor)
@@ -71,16 +124,6 @@ export class NowPlayingCommand extends Command {
             embed.setDescription("No track is currently playing")
         }
 
-        await interaction.reply({
-            ephemeral: true,
-            embeds: [embed]
-        })
-    }
-
-    public override registerApplicationCommands(registry: ApplicationCommandRegistry): void {
-        registerCommands(registry, {
-            name: this.name,
-            description: this.description
-        })
+        return embed
     }
 }
