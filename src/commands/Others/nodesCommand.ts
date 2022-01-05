@@ -87,19 +87,19 @@ export class NodesCommand extends Command {
     private buildActionRow(allNodes: CoffeeNode[], page: number, end: boolean): MessageActionRow[] {
         const previous = new MessageButton()
             .setCustomId("nodes-previous")
-            .setLabel("Previous")
+            .setEmoji("⬅️")
             .setStyle("PRIMARY")
             .setDisabled(end || !page)
 
         const refresh = new MessageButton()
             .setCustomId("nodes-refresh")
-            .setLabel("Refresh")
-            .setStyle("SECONDARY")
+            .setEmoji("🔄")
+            .setStyle("PRIMARY")
             .setDisabled(end)
 
         const next = new MessageButton()
             .setCustomId("nodes-next")
-            .setLabel("Next")
+            .setEmoji("➡️")
             .setStyle("PRIMARY")
             .setDisabled(end || (page * pageItems) + pageItems >= allNodes.length)
 

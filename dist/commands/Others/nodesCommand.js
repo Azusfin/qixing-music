@@ -82,17 +82,17 @@ let NodesCommand = class NodesCommand extends framework_1.Command {
     buildActionRow(allNodes, page, end) {
         const previous = new discord_js_1.MessageButton()
             .setCustomId("nodes-previous")
-            .setLabel("Previous")
+            .setEmoji("⬅️")
             .setStyle("PRIMARY")
             .setDisabled(end || !page);
         const refresh = new discord_js_1.MessageButton()
             .setCustomId("nodes-refresh")
-            .setLabel("Refresh")
-            .setStyle("SECONDARY")
+            .setEmoji("🔄")
+            .setStyle("PRIMARY")
             .setDisabled(end);
         const next = new discord_js_1.MessageButton()
             .setCustomId("nodes-next")
-            .setLabel("Next")
+            .setEmoji("➡️")
             .setStyle("PRIMARY")
             .setDisabled(end || (page * pageItems) + pageItems >= allNodes.length);
         return [
