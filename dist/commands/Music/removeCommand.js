@@ -24,13 +24,6 @@ let RemoveCommand = class RemoveCommand extends framework_1.Command {
         }
         const start = interaction.options.getNumber("start", true);
         const end = interaction.options.getNumber("end") ?? start;
-        if (start < 1) {
-            await interaction.reply({
-                ephemeral: true,
-                embeds: [this.makeEmbed("`start` option must be more than or equal to 1")]
-            });
-            return;
-        }
         if (start > length) {
             await interaction.reply({
                 ephemeral: true,
@@ -54,7 +47,6 @@ let RemoveCommand = class RemoveCommand extends framework_1.Command {
         }
         queue.remove(start - 1, end);
         await interaction.reply({
-            ephemeral: true,
             embeds: [this.makeEmbed(`Successfully removed tracks from ${start} to ${end}`)]
         });
     }
@@ -66,7 +58,8 @@ let RemoveCommand = class RemoveCommand extends framework_1.Command {
                     type: "NUMBER",
                     name: "start",
                     required: true,
-                    description: "The position where to start remove the tracks"
+                    description: "The position where to start remove the tracks",
+                    minValue: 1
                 }, {
                     type: "NUMBER",
                     name: "end",
