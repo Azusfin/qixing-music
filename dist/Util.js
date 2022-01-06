@@ -9,14 +9,17 @@ function registerCommands(registry, data) {
     }
 }
 exports.registerCommands = registerCommands;
+const barSize = 11;
+const barText = "▬";
+const barSlider = "🔘";
 function progressBar(total, current, url) {
     const percentage = current > total ? 1 : current / total;
-    const progress = Math.round(11 * percentage);
-    const emptyProgress = 11 - progress;
-    const emptyProgressText = "▬".repeat(emptyProgress);
+    const progress = Math.round(barSize * percentage);
+    const emptyProgress = barSize - progress;
+    const emptyProgressText = barText.repeat(emptyProgress);
     const progressText = progress >= 1
-        ? `[▬](${url})`.repeat(progress).replace(/.$/, ")🔘")
-        : "🔘";
+        ? `[${barText.repeat(progress)}](${url})${barSlider}`
+        : barSlider;
     const bar = `${progressText}${emptyProgressText}`;
     const calculated = percentage * 100;
     return [bar, calculated];
