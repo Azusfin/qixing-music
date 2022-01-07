@@ -93,16 +93,13 @@ export class ReadyEvent extends Listener {
             }
         })
 
-        lava.on("replayError", async (player, error) => {
+        lava.on("replayError", async player => {
             const embed = new MessageEmbed()
                 .setTitle("Replay Error")
                 .setDescription("Failed to replay player after disconnected from node")
                 .setColor(config.embedColor)
 
-            this.container.logger.error(
-                "ReplayError:", player.options.guildID,
-                "-", error
-            )
+            this.container.logger.info("ReplayError:", player.options.guildID)
 
             try {
                 const text = player.get<TextChannel>("text")
