@@ -111,6 +111,10 @@ export class NowPlayingCommand extends Command {
                     value: `${player.options.volume}%`,
                     inline: true
                 }, {
+                    name: "Paused",
+                    value: player.state === Utils.PlayerStates.Paused ? "Yes" : "No",
+                    inline: true
+                }, {
                     name: "Progress",
                     value: `${bar}\n` +
                         `${track.isStream

@@ -106,6 +106,10 @@ let NowPlayingCommand = class NowPlayingCommand extends framework_1.Command {
                 value: `${player.options.volume}%`,
                 inline: true
             }, {
+                name: "Paused",
+                value: player.state === lavacoffee_1.Utils.PlayerStates.Paused ? "Yes" : "No",
+                inline: true
+            }, {
                 name: "Progress",
                 value: `${bar}\n` +
                     `${track.isStream
