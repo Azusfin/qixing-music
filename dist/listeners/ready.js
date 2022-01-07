@@ -16,6 +16,7 @@ const discord_js_1 = require("discord.js");
 const humanize_duration_1 = __importDefault(require("humanize-duration"));
 const lavacoffee_1 = require("lavacoffee");
 const config_1 = require("../config");
+const Util_1 = require("../Util");
 let ReadyEvent = class ReadyEvent extends framework_1.Listener {
     async run() {
         this.container.logger.info("Configurations Loaded");
@@ -62,7 +63,10 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
             this.container.logger.error("LavalinkNode Error:", node.options.name, "-", error);
         });
         lava.on("playerCreate", player => this.container.logger.info("LavalinkPlayer Created:", player.options.guildID));
-        lava.on("playerDestroy", player => this.container.logger.info("LavalinkPlayer Destroyed:", player.options.guildID));
+        lava.on("playerDestroy", player => {
+            this.container.logger.info("LavalinkPlayer Destroyed:", player.options.guildID);
+            Util_1.skipVotes.delete(player.options.guildID);
+        });
         lava.on("playerReplay", async (player) => {
             const embed = new discord_js_1.MessageEmbed()
                 .setTitle("Player Replayed")
@@ -123,12 +127,14 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
         });
         lava.on("trackEnd", async (player, track) => {
             this.container.logger.info("TrackEnd:", player.options.guildID, "-", "Requester:", track.requester.id, "-", "Title:", track.title, "-", "Url:", track.url);
+            Util_1.skipVotes.delete(player.options.guildID);
             const msg = player.get("msg");
             player.set("msg", undefined);
             await msg?.delete();
         });
         lava.on("trackStuck", async (player, track, payload) => {
             this.container.logger.info("TrackStuck:", player.options.guildID, "-", "Requester:", track.requester.id, "-", "Title:", track.title, "-", "Url:", track.url, "-", "ThresholdMS:", payload.thresholdMs);
+            Util_1.skipVotes.delete(player.options.guildID);
             const msg = player.get("msg");
             player.set("msg", undefined);
             await msg?.delete();
@@ -147,6 +153,7 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
         });
         lava.on("trackError", async (player, track, payload) => {
             this.container.logger.info("TrackError:", player.options.guildID, "-", "Requester:", track.requester.id, "-", "Title:", track.title, "-", "Url:", track.url, "-", "Cause:", payload.exception.cause, "-", "Severity:", payload.exception.severity, "-", payload.exception.message);
+            Util_1.skipVotes.delete(player.options.guildID);
             const msg = player.get("msg");
             player.set("msg", undefined);
             await msg?.delete();

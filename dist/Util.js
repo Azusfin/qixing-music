@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.progressBar = exports.registerCommands = void 0;
+exports.calcRequiredUsers = exports.skipVotes = exports.progressBar = exports.registerCommands = void 0;
 const config_1 = require("./config");
 function registerCommands(registry, data) {
     registry.registerChatInputCommand(data, { guildIds: undefined, behaviorWhenNotIdentical: "OVERWRITE" /* Overwrite */ });
@@ -25,3 +25,8 @@ function progressBar(total, current, url) {
     return [bar, calculated];
 }
 exports.progressBar = progressBar;
+exports.skipVotes = new Map();
+function calcRequiredUsers(users) {
+    return Math.round(users * 0.75);
+}
+exports.calcRequiredUsers = calcRequiredUsers;

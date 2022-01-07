@@ -36,3 +36,9 @@ export function progressBar(
 
     return [bar, calculated]
 }
+
+export const skipVotes = new Map<string, Set<string>>()
+
+export function calcRequiredUsers(users: number): number {
+    return Math.round(users * 0.75)
+}

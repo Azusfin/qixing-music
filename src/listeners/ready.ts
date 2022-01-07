@@ -4,6 +4,7 @@ import { Message, MessageEmbed, Team, TextChannel, User } from "discord.js"
 import humanizeDuration from "humanize-duration"
 import { CoffeeLava, CoffeeTrack, Utils } from "lavacoffee"
 import { config } from "../config"
+import { skipVotes } from "../Util"
 
 @ApplyOptions<ListenerOptions>({
     name: "ready",
@@ -72,7 +73,10 @@ export class ReadyEvent extends Listener {
             )
         })
         lava.on("playerCreate", player => this.container.logger.info("LavalinkPlayer Created:", player.options.guildID))
-        lava.on("playerDestroy", player => this.container.logger.info("LavalinkPlayer Destroyed:", player.options.guildID))
+        lava.on("playerDestroy", player => {
+            this.container.logger.info("LavalinkPlayer Destroyed:", player.options.guildID)
+            skipVotes.delete(player.options.guildID)
+        })
 
         lava.on("playerReplay", async player => {
             const embed = new MessageEmbed()
@@ -160,6 +164,8 @@ export class ReadyEvent extends Listener {
                 "-", "Url:", (track as CoffeeTrack).url
             )
 
+            skipVotes.delete(player.options.guildID)
+
             const msg = player.get<Message>("msg")
             player.set("msg", undefined)
             await msg?.delete()
@@ -173,6 +179,8 @@ export class ReadyEvent extends Listener {
                 "-", "Url:", (track as CoffeeTrack).url,
                 "-", "ThresholdMS:", payload.thresholdMs
             )
+
+            skipVotes.delete(player.options.guildID)
 
             const msg = player.get<Message>("msg")
             player.set("msg", undefined)
@@ -205,6 +213,8 @@ export class ReadyEvent extends Listener {
                 "-", "Severity:", payload.exception.severity,
                 "-", payload.exception.message
             )
+
+            skipVotes.delete(player.options.guildID)
 
             const msg = player.get<Message>("msg")
             player.set("msg", undefined)
