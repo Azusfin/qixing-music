@@ -11,7 +11,7 @@ const decorators_1 = require("@sapphire/decorators");
 const framework_1 = require("@sapphire/framework");
 let CommandSuccessEvent = class CommandSuccessEvent extends framework_1.Listener {
     run({ interaction, command }) {
-        this.container.logger.info("Command Success:", command.name, "- User:", interaction.user.id, "- Channel:", interaction.channel?.id ?? "DM", "- Guild:", interaction.guild?.id ?? "N/A");
+        this.container.logger.info("Command Success:", command.name, "-", "User:", interaction.user.id, "-", "Channel:", interaction.channel?.id ?? "DM", "-", "Guild:", interaction.guild?.id ?? "N/A");
     }
 };
 CommandSuccessEvent = __decorate([

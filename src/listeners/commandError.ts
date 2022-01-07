@@ -13,9 +13,9 @@ export class CommandErrorEvent extends Listener {
     ): void {
         this.container.logger.error(
             "Command Error:", command.name,
-            "- User:", interaction.user.id,
-            "- Channel:", interaction.channel?.id ?? "DM",
-            "- Guild:", interaction.guild?.id ?? "N/A"
+            "-", "User:", interaction.user.id,
+            "-", "Channel:", interaction.channel?.id ?? "DM",
+            "-", "Guild:", interaction.guild?.id ?? "N/A"
         )
 
         const embed = new MessageEmbed()

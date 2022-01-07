@@ -135,9 +135,9 @@ export class ReadyEvent extends Listener {
 
             this.container.logger.info(
                 "TrackStart:", player.options.guildID,
-                "- Requester:", (track.requester as User).id,
-                "- Title:", track.title,
-                "- Url:", (track as CoffeeTrack).url
+                "-", "Requester:", (track.requester as User).id,
+                "-", "Title:", track.title,
+                "-", "Url:", (track as CoffeeTrack).url
             )
 
             try {
@@ -155,9 +155,9 @@ export class ReadyEvent extends Listener {
         lava.on("trackEnd", async (player, track) => {
             this.container.logger.info(
                 "TrackEnd:", player.options.guildID,
-                "- Requester:", (track.requester as User).id,
-                "- Title:", track.title,
-                "- Url:", (track as CoffeeTrack).url
+                "-", "Requester:", (track.requester as User).id,
+                "-", "Title:", track.title,
+                "-", "Url:", (track as CoffeeTrack).url
             )
 
             const msg = player.get<Message>("msg")
@@ -168,10 +168,10 @@ export class ReadyEvent extends Listener {
         lava.on("trackStuck", async (player, track, payload) => {
             this.container.logger.info(
                 "TrackStuck:", player.options.guildID,
-                "- Requester:", (track.requester as User).id,
-                "- Title:", track.title,
-                "- Url:", (track as CoffeeTrack).url,
-                "- ThresholdMS:", payload.thresholdMs
+                "-", "Requester:", (track.requester as User).id,
+                "-", "Title:", track.title,
+                "-", "Url:", (track as CoffeeTrack).url,
+                "-", "ThresholdMS:", payload.thresholdMs
             )
 
             const msg = player.get<Message>("msg")
@@ -198,11 +198,11 @@ export class ReadyEvent extends Listener {
         lava.on("trackError", async (player, track, payload) => {
             this.container.logger.info(
                 "TrackError:", player.options.guildID,
-                "- Requester:", (track.requester as User).id,
-                "- Title:", track.title,
-                "- Url:", (track as CoffeeTrack).url,
-                "- Cause:", payload.exception.cause,
-                "- Severity:", payload.exception.severity,
+                "-", "Requester:", (track.requester as User).id,
+                "-", "Title:", track.title,
+                "-", "Url:", (track as CoffeeTrack).url,
+                "-", "Cause:", payload.exception.cause,
+                "-", "Severity:", payload.exception.severity,
                 "-", payload.exception.message
             )
 

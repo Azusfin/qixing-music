@@ -13,9 +13,9 @@ export class CommandDeniedEvent extends Listener {
     ): void {
         this.container.logger.warn(
             "Command Denied:", command.name,
-            "- User:", interaction.user.id,
-            "- Channel:", interaction.channel?.id ?? "DM",
-            "- Guild:", interaction.guild?.id ?? "N/A"
+            "-", "User:", interaction.user.id,
+            "-", "Channel:", interaction.channel?.id ?? "DM",
+            "-", "Guild:", interaction.guild?.id ?? "N/A"
         )
 
         if (Reflect.get(Object(context), "silent")) return

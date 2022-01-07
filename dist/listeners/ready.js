@@ -111,7 +111,7 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
                 inline: true
             })
                 .setColor(config_1.config.embedColor);
-            this.container.logger.info("TrackStart:", player.options.guildID, "- Requester:", track.requester.id, "- Title:", track.title, "- Url:", track.url);
+            this.container.logger.info("TrackStart:", player.options.guildID, "-", "Requester:", track.requester.id, "-", "Title:", track.title, "-", "Url:", track.url);
             try {
                 const text = player.get("text");
                 const msg = await text.send({ embeds: [embed] });
@@ -122,13 +122,13 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
             }
         });
         lava.on("trackEnd", async (player, track) => {
-            this.container.logger.info("TrackEnd:", player.options.guildID, "- Requester:", track.requester.id, "- Title:", track.title, "- Url:", track.url);
+            this.container.logger.info("TrackEnd:", player.options.guildID, "-", "Requester:", track.requester.id, "-", "Title:", track.title, "-", "Url:", track.url);
             const msg = player.get("msg");
             player.set("msg", undefined);
             await msg?.delete();
         });
         lava.on("trackStuck", async (player, track, payload) => {
-            this.container.logger.info("TrackStuck:", player.options.guildID, "- Requester:", track.requester.id, "- Title:", track.title, "- Url:", track.url, "- ThresholdMS:", payload.thresholdMs);
+            this.container.logger.info("TrackStuck:", player.options.guildID, "-", "Requester:", track.requester.id, "-", "Title:", track.title, "-", "Url:", track.url, "-", "ThresholdMS:", payload.thresholdMs);
             const msg = player.get("msg");
             player.set("msg", undefined);
             await msg?.delete();
@@ -146,7 +146,7 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
             }
         });
         lava.on("trackError", async (player, track, payload) => {
-            this.container.logger.info("TrackError:", player.options.guildID, "- Requester:", track.requester.id, "- Title:", track.title, "- Url:", track.url, "- Cause:", payload.exception.cause, "- Severity:", payload.exception.severity, "-", payload.exception.message);
+            this.container.logger.info("TrackError:", player.options.guildID, "-", "Requester:", track.requester.id, "-", "Title:", track.title, "-", "Url:", track.url, "-", "Cause:", payload.exception.cause, "-", "Severity:", payload.exception.severity, "-", payload.exception.message);
             const msg = player.get("msg");
             player.set("msg", undefined);
             await msg?.delete();
