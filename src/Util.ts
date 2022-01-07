@@ -1,5 +1,6 @@
 import { ApplicationCommandRegistry, RegisterBehavior } from "@sapphire/framework";
 import { ChatInputApplicationCommandData } from "discord.js";
+import Parser from "ms-utility";
 import { config } from "./config";
 
 export function registerCommands(
@@ -42,3 +43,46 @@ export const skipVotes = new Map<string, Set<string>>()
 export function calcRequiredUsers(users: number): number {
     return Math.round(users * 0.75)
 }
+
+export const msParser = new Parser([
+    [
+        "ms",
+        {
+            letter: "ms",
+            word: "millisecond",
+            ms: 1
+        }
+    ],
+    [
+        "s",
+        {
+            letter: "s",
+            word: "second",
+            ms: 1e3
+        }
+    ],
+    [
+        "m",
+        {
+            letter: "m",
+            word: "minute",
+            ms: 60e3
+        }
+    ],
+    [
+        "h",
+        {
+            letter: "h",
+            word: "hour",
+            ms: 3600e3
+        }
+    ],
+    [
+        "d",
+        {
+            letter: "d",
+            word: "day",
+            ms: 86400e3
+        }
+    ]
+])
