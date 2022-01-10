@@ -28,7 +28,7 @@
     "@sapphire/plugin-logger": "^2.1.1",
     "discord.js": "^13.5.0",
     "humanize-duration": "^3.27.1",
-    "lavacoffee": "^1.5.1",
+    "lavacoffee": "^1.5.2",
     "ms-utility": "^3.0.2",
     "yaml": "^2.0.0-10"
   },
