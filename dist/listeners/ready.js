@@ -127,7 +127,9 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
                 this.container.logger.error("TrackStart Error:", player.options.guildID, "-", err);
             }
         });
-        lava.on("trackEnd", async (player, track) => {
+        lava.on("trackEnd", async (player, track, payload) => {
+            if (payload.reason === "REPLACED")
+                return;
             this.container.logger.info("TrackEnd:", player.options.guildID, "-", "Requester:", track.requester.id, "-", "Title:", track.title, "-", "Url:", track.url);
             Util_1.skipVotes.delete(player.options.guildID);
             const msg = player.get("msg");

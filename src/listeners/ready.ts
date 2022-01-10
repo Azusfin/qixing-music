@@ -158,7 +158,9 @@ export class ReadyEvent extends Listener {
             }
         })
 
-        lava.on("trackEnd", async (player, track) => {
+        lava.on("trackEnd", async (player, track, payload) => {
+            if (payload.reason === "REPLACED") return
+
             this.container.logger.info(
                 "TrackEnd:", player.options.guildID,
                 "-", "Requester:", (track.requester as User).id,
