@@ -6,7 +6,7 @@ import { registerCommands } from "../../Util";
 
 @ApplyOptions<CommandOptions>({
     name: "volume",
-    description: "Set the volume player, if any",
+    description: "Set the player volume, if any",
     preconditions: ["allowMaintenance", "GuildOnly", "needPlayer", "manageChannels"]
 })
 export class VolumeCommand extends Command {

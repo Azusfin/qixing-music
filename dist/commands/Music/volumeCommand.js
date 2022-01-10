@@ -43,7 +43,7 @@ let VolumeCommand = class VolumeCommand extends framework_1.Command {
 VolumeCommand = __decorate([
     (0, decorators_1.ApplyOptions)({
         name: "volume",
-        description: "Set the volume player, if any",
+        description: "Set the player volume, if any",
         preconditions: ["allowMaintenance", "GuildOnly", "needPlayer", "manageChannels"]
     })
 ], VolumeCommand);
