@@ -87,12 +87,14 @@ let ReadyEvent = class ReadyEvent extends framework_1.Listener {
                 .setDescription("Failed to replay player after disconnected from node")
                 .setColor(config_1.config.embedColor);
             this.container.logger.info("ReplayError:", player.options.guildID);
-            try {
-                const text = player.get("text");
-                await text.send({ embeds: [embed] });
-            }
-            catch (err) {
-                this.container.logger.error("ReplayError Error:", player.options.guildID, "-", err);
+            if (player.queue.current) {
+                try {
+                    const text = player.get("text");
+                    await text.send({ embeds: [embed] });
+                }
+                catch (err) {
+                    this.container.logger.error("ReplayError Error:", player.options.guildID, "-", err);
+                }
             }
         });
         lava.on("trackStart", async (player, track) => {

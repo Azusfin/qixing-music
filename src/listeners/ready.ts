@@ -105,14 +105,16 @@ export class ReadyEvent extends Listener {
 
             this.container.logger.info("ReplayError:", player.options.guildID)
 
-            try {
-                const text = player.get<TextChannel>("text")
-                await text!.send({ embeds: [embed] })
-            } catch (err) {
-                this.container.logger.error(
-                    "ReplayError Error:", player.options.guildID,
-                    "-", err
-                )
+            if (player.queue.current) {
+                try {
+                    const text = player.get<TextChannel>("text")
+                    await text!.send({ embeds: [embed] })
+                } catch (err) {
+                    this.container.logger.error(
+                        "ReplayError Error:", player.options.guildID,
+                        "-", err
+                    )
+                }
             }
         })
 
