@@ -144,7 +144,7 @@ export class PlayCommand extends Command {
 
     private errorEmbed(msg: string): MessageEmbed {
         return new MessageEmbed()
-            .setTitle("LOad Track Error")
+            .setTitle("Load Track Error")
             .setDescription(msg)
             .setColor(config.embedColor)
     }
